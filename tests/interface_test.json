@@ -1,0 +1,69 @@
+{
+    "title": "midProxy interface configuration",
+    "version": "0.0.1",
+    "engine": "mockjs",
+    "rulebase": "./rules/",
+    "status": "online",
+    "interfaces": [ {
+        "name": "获取mobile主页信息",
+        "id": "Mobile.getInfo",
+        "urls": {
+            "online": "http://localhost:8080/channelui/api/m/home/getInfo"
+        },
+        "method": "get",
+        "dataType": "json",
+        "encoding": "utf8",
+        "isCookieNeeded": true,
+        "isRuleStatic": true
+    },
+        {
+            "name": "获取mobile主页的wechat配置信息",
+            "id": "Mobile.getWewchatInfo",
+            "urls": {
+                "online": "http://localhost:8080/channelui/api/m/home/getWechatInfo"
+            },
+            "method": "get",
+            "dataType": "json",
+            "encoding": "utf8",
+            "isCookieNeeded": true,
+            "isRuleStatic": false
+        },{
+        "name": "我的购物车",
+        "id": "Cart.getMyCart",
+        "urls": {
+            "online": "http://cart.taobao.com/json/asyncGetMyCart.do"
+        },
+        "encoding": "gbk"
+    }, {
+        "name": "主搜索接口",
+        "id": "Search.list",
+        "urls": {
+            "online": "http://api.s.m.taobao.com/search.json"
+        }
+    }, {
+        "name": "热词推荐接口",
+        "id": "Search.suggest",
+        "urls": {
+            "online": "http://suggest.taobao.com/sug"
+        }
+    }, {
+        "name": "导航获取接口",
+        "id": "Search.getNav",
+        "urls": {
+            "online": "http://s.m.taobao.com/client/search.do"
+        },
+        "encoding": "utf8",
+        "isCookieNeeded": false
+    }, {
+        "name": "post测试接口",
+        "id": "Test.post",
+        "urls": {
+            "online": "http://127.0.0.1:9000/post"
+        },
+        "method": "post",
+        "dataType": "text"
+    } ],
+    "combo": {
+        "getMyData": [ "Cart.getCart", "Search.suggest" ]
+    }
+}

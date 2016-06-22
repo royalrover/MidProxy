@@ -1,0 +1,87 @@
+{{if isApp}}
+<div class="{{ if pageName == "homepage" }} m-homepage-app-cover {{else}} m-app-cover {{/if}} j_AppCover" style="display:none;">
+	<div class="close-btn j_CloseBtn"></div>
+	<img class="cover-img j_CoverImg" src="http://cdn1.showjoy.com/images/77/779bb052bc0a48b9a972b61b811584c1.png" />
+</div>
+{{/if}}
+
+<div id="header" class="ui-toolbar j_Header">
+	<div class="ui-toolbar-wrap">
+		<!-- 注册页面或者是登陆页面 -->
+		{{if pageName == "register" || pageName == "login"}}
+			<div class="ui-toolbar-left">
+				<a class="ui-icon ui-icon-back" href="javascript:history.go(-1)"></a>
+			</div>
+			<!-- 注册页面 -->
+			{{if pageName == "register"}}
+				<h1 class="ui-toolbar-title">
+					用户注册
+				</h1>
+				<div class="ui-toolbar-right">
+					<a href="{{commonEnv.userServerName}}/invite/getInviotr" class="link-invite">受邀注册</a>
+				</div>
+			<!-- 登陆页面 -->
+			{{else if pageName == "login"}}
+				<h1 class="ui-toolbar-title">用户登录</h1>
+				<div class="ui-toolbar-right"></div>
+			{{/if}}
+
+		<!-- 首页 -->
+		{{else if pageName == "homepage"}}
+			<div class="ui-toolbar-left">
+				<a class="ui-icon ui-icon-search" id="J_CallSearchToolbar" href="/search/"></a>
+			</div>
+			<h1 class="ui-toolbar-title"><a href="{{commonEnv.mainServerName}}" id="logo"></a></h1>
+			<div class="ui-toolbar-right">
+				{{if login}}
+					<a class="ui-icon ui-icon-user" href="{{commonEnv.userServerName}}/u/info.html"></a>
+				{{else}}
+					<!--  TODO: service和loginRedirectUri需要从后端获取 -->
+					<a href="{{commonEnv.loginServerName}}/?service={{service}}&redirect_uri={{loginRedirectUri}}">登录</a>
+				{{/if}}
+			</div>
+
+		<!-- 除首页与登陆注册页面外的其他页面 -->
+		{{else}}
+			<div class="ui-toolbar-left">
+				<a class="ui-icon ui-icon-back j_GoBack" href="javascript:;"></a>
+			</div>
+			<h1 class="ui-toolbar-title">{{topTitle}}</h1>
+
+			{{if pageName != "setAddress" && pageName != "cardsDiscount" && pageName != "couponsDiscount" && pageName != "point" && pageName != "redPacketsDiscount" && pageName != "paymode" && pageName != "chooseAddress" && pageName != "userPoint" && pageName != "expressSelect" && pageName != "pictext" && pageName != "memberRights" }}
+				<div class="ui-toolbar-right">
+					{{if pageName == "addComment" }}
+						<div id="J_ImageUploadSubmit" class="u-submit">发布</div>
+					{{else}}
+						{{if pageName == "itemDetail" || pageName == "grouponDetail"}}
+							<a class="ui-toolbar-right-btn" href="{{commonEnv.mainServerName}}"><i class="ui-icon ui-icon-home"></i></a>
+						{{/if}}
+						{{if pageNme != "addComment" && pageName != "homepage" && pageName != "itemDetail" && pageName != "grouponDetail" && pageName != "setAddress" && pageName != "cardsDiscount" && pageName != "couponsDiscount" && pageName != "point" && pageName != "redPacketsDiscount" && pageName != "paymode" && pageName != "chooseAddress" && pageName != "userPoint" && pageName != "expressSelect" && pageName != "pictext" && pageName != "memberRights"}}
+							<a class="ui-toolbar-right-btn" href="{{commonEnv.listServerName}}/search/" id="J_CallSearchToolbar"><i class="ui-icon ui-icon-search"></i></a>
+						{{/if}}
+						{{if gv_user}}
+							<div class="ui-toolbar-btn"><i class="ui-icon ui-icon-menu j_MenuDrop" data-content="[{text:'$!{gv_user.nick}',icon: 'user',href: '${userServerName}/u/info.html'},'divider',{text: '商品库',icon: 'cate',href: '${listServerName}/search/?comeFrom=cate'},#if($pageName!="grouponDetail" && $pageName!="itemDetail")'divider',{text: '首页',icon: 'home',href: '${mainServerName}'}#end]"></i></div>
+						{{else}}
+							<div class="ui-toolbar-btn"><i class="ui-icon ui-icon-menu j_MenuDrop" data-content="[#if($pageName != 'orderEntry'),{text: '请登录',icon: 'user',href: '$!{loginServerName}/?service=$!{service}&redirect_uri=$!{loginRedirectUri}'}#end,'divider',{text: '商品库',icon: 'cate',href: '${listServerName}/search/?comeFrom=cate'},#if($pageName!="grouponDetail" && $pageName!="itemDetail")'divider',{text: '首页',icon: 'home',href: '${mainServerName}'}#end]"></i></div>
+						{{/if}}
+					{{/if}}
+				</div>
+			{{/if}}
+		{{/if}}
+	</div>
+
+	<!-- 搜索块 -->
+	<div id="J_SearchToolbar" class="global-search">
+		<form action="{{commonEnv.listServerName}}/search/" method="get" class="search-form">
+			<span class="clear-content" id="J_ClearContent"></span>
+			<input class="search-input" name="keyword" type="text" placeholder="想买什么？搜搜看吧！">
+			<button type="submit" class="search-btn" id="J_CallSearchToolbar">
+			<i class="ui-icon ui-icon-search search-icon"></i>
+			<span class="search-text">搜索</span></button>
+		</form>
+	</div>
+</div>
+
+{{if pageName == "homepage" || pageName == "tryNavi" || pageName == "groupon"}}
+	<div class="backtop j_BackTop"><img src="http://cdn1.showjoy.com/images/1c/1c648ece98284c8491a1ec05e5903e04.png" width="50" height="50" /></div>
+{{/if}}

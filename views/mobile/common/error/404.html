@@ -1,0 +1,184 @@
+#*
+* @fileoverview 404页面 
+*#
+#*
+ * @fileoverview 
+ * @Author xinghun @Date 2015-12-27
+ *#
+#parse("common/common/config/gv_config.html")
+#if($!{isWebRequest})
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:wb="http://open.weibo.com/wb">
+<head>
+    <title>您访问的页面不存在</title>
+    <meta charset="utf-8" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta property="wb:webmaster" content="c595e111b0fe6363" />
+
+    <link href="${gv_vendorRoot}/static-pc/reset.css" rel="stylesheet">
+	<link href="${gv_vendorRoot}/static-pc/layout.css" rel="stylesheet">
+	<link href="${gv_vendorRoot}/static-pc/grid-fixed.css" rel="stylesheet">
+	<link href="${gv_commonRoot}/commoncj/commoncj.min.css" rel="stylesheet">
+	<link href="${gv_commonRoot}/footer-p/footer-p.min.css" rel="stylesheet">
+	<link href="${gv_commonRoot}/header-p/header-p.min.css" rel="stylesheet">
+	<link href="${gv_commonRoot}/error/error.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+    .login-section {
+        background: #010001;
+    }
+    .login-section .container {
+        background: #010001 url("$!{cdnUrl}/assets/img/4.0/login/login.png") no-repeat 0 0;
+    }
+    #content .container .wrapper {
+        width: 729px;
+        margin: 0 auto;
+        position: relative;
+        text-align: center;
+    }
+    </style>
+    
+    <div id="layout">
+
+        <div id="header">
+            <div class="container">
+                <div class="container-left">
+                    <h1>
+                        <a href="${mainServerName}">
+                            <img src="$!{cdnUrl}/images/eb/eb08514dc5a04844ada355d61af732a7.png">
+                        </a>
+                    </h1>
+                </div>
+                <div class="container-right">
+                    <ul id="promise">
+                        <a href="${mainServerName}/u/advantage.html#module-1" target="_blank">
+                            <li class="genuine"></li>
+                        </a>
+                        <a href="${mainServerName}/u/advantage.html#module-2" target="_blank">
+                            <li class="refund"></li>
+                        </a>
+                        <a href="${mainServerName}/u/advantage.html#module-5" target="_blank">
+                            <li class="postfee"></li>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="J_RegisterDialog" class="j_Dialog register" style="">
+            <div id="content" class="">
+                <div class="container">
+                    <div class="wrapper">
+                        <img src="$!{cdnUrl}/images/87/8765bdf112a644828df20a16c0a0e5dc.png" alt="页面不存在">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="footer">
+        <div class="banner">
+            <p class="footer-email">kefu@showjoy.com</p>
+            <div class="footer-link-wrap">
+                <a href="$!{mainServerName}/u/advantage.html#module-1" target="_blank"></a>
+				<a href="$!{mainServerName}/u/advantage.html#module-5" target="_blank"></a>
+				<a href="$!{mainServerName}/u/advantage.html#module-2" target="_blank"></a>
+				<a href="$!{mainServerName}/u/advantage.html#module-5" target="_blank"></a>
+            </div>
+        </div>
+        <div class="list-wrap">
+            <ul class="nav-list">
+                <li>
+                    <h3><a href="${mainServerName}/help/friend.html" target="_blank">友情链接</a>
+                    </h3>
+                </li>
+                <li>
+                    <h3><a href="${mainServerName}/help/about.html" rel="nofollow" target="_blank">关于我们</a>
+                    </h3>
+                </li>
+                <li>
+                    <h3><a href="${mainServerName}/help/contact.html" rel="nofollow" target="_blank">联络我们</a>
+                    </h3>
+                </li>
+                <li>
+                    <h3><a href="$mainServerName/help/join.html" rel="nofollow" target="_blank">招贤纳士</a>
+                    </h3>
+                </li>
+                <li>
+                    <h3><a href="http://wpa.qq.com/msgrd?v=3&uin=2488632782&site=qq&menu=yes" target="_blank">联系客服</a>
+                    </h3>
+                </li>
+                <li>
+                    <h3><a href="http://www.miibeian.gov.cn" rel="nofollow" target="_blank">浙ICP备12027495号</a>
+                    </h3>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+	#else
+		#*
+* @fileoverview 404页面 
+*#
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=320.1, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="format-detection" content="telephone=no, email=no" />
+
+        <meta charset="utf-8">
+        <title>404 Not Found</title>
+		
+		<link rel="stylesheet" type="text/css" href="$!{cdnUrl}/assets/mobile/1.0.0/css/core/reset.css" />
+		<link rel="stylesheet" type="text/css" href="$!{cdnUrl}/assets/vendor/gmu/gmu.css" />
+		<link href="$!{cdnUrl}/assets/mobile/1.0.0/css/global.css" rel="stylesheet" />
+		<style>
+        	#content .wrapper{
+        		padding-top: 100px; 
+        		width: 226px;
+        		margin: 0 auto;
+        		position: relative;
+        	}
+        	#content .msg{
+        		position: absolute;
+        		bottom: 170px;
+        		left: 65px;
+        		color: #4b3656;
+        		font-size: 14px;
+        		line-height: 21px;
+        	}
+        </style>
+		<script type="text/javascript" src="$!{cdnUrl}/assets/vendor/gmu/zepto.min.js"></script>
+		<script type="text/javascript" src="$!{cdnUrl}/assets/vendor/gmu/gmu.min.js"></script>
+		<script src="$!{cdnUrl}/assets/mobile/1.0.0/js/global-min.js" type="text/javascript" ></script>
+    </head>
+    <body>
+		<div id="layout">
+			<div id="header">
+				<a class="ui-icon ui-icon-back" href="/groupon/detail/25969.html"></a>
+				<h1>抱歉，页面不存在~</h1>
+				<i class="ui-icon ui-icon-menu j_MenuDrop" data-content="[{text: '首页',icon: 'home',href: '${mainServerName}'},'divider',{text: '搜索',icon: 'search',href: '${listServerName}/search/'},'divider',{text: '类目',icon: 'cate',href: '${listServerName}/search/?comeFrom=cate'}]"></i>
+	        </div>
+			<div id="content">
+            	<div class="wrapper">
+            		<p class="msg">页面不存在</p>
+            		<img src="$!{cdnUrl}/images/73/730c8864c0a4461c85223a7dbeced799.png" width=226 />
+            	</div>
+			</div>
+		</div>
+		<div id="footer">
+            <p class="footer-nav"><a href="" class="current">触屏版</a><span class="split">|</span><a href="$!{redirectWebUrl}">电脑版</a></p>
+        	<p>浙ICP备12027495号</p>
+        </div>
+	</body>
+	<script>
+		window.location.href = "${mainServerName}";
+    </script>
+</html>
+#end

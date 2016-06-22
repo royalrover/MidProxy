@@ -1,0 +1,72 @@
+{
+  "request": {
+    "keywords": "",
+    "catId|100000-999999": 1
+  },
+  "response": {
+    "count|0-1": 1,
+    "data|1-10": {
+      "pageBO|8": {
+        "id|+1": 187,
+        "pageName": "WAP首页",
+        "pageEnName": "WAP-homepage",
+        "title": "尚妆,首家正品化妆品免费试用B2C平台,云集时尚美妆,尚妆网SHOWJOY.COM",
+        "description": "尚妆网是国内知名化妆品正品销售平台,女性购买化妆品的首选网站,尚妆大牌云集专注于香水彩妆,个护化妆、香氛等品类,尚妆首创“先试后买”第一家支持全场免费试用的化妆品特卖网站。",
+        "keywords": "尚妆,云集网,化妆品免费试用,尚妆网,香水网站,化妆品特卖",
+        "moduleNames|1": [
+          "限时团购",
+          "热门推荐",
+          "限时特卖",
+          "活动banner",
+          "7区块",
+          "热门品牌",
+          "热销榜单",
+          "活动banner位",
+          "未登录状态活动banner位",
+          "精选专题",
+          "热门试用",
+          "热销榜单banner"
+        ],
+        "moduleMap|1": {
+          "活动banner|3": [
+            {
+              "pageId|+1": 800,
+              "id|+1": 7735,
+              "moduleName": "活动banner位",
+              "recordName": [
+                "链接地址",
+                "图片地址",
+                "描述"
+              ],
+              "recordMap": {
+                "图片地址": {
+                  "moduleId": 7735,
+                  "id": 14039,
+                  "name": "图片地址",
+                  "value": "http://file.showjoy.com/images/f1/f18c4899b3f34758aedb51635127d7ee.jpg"
+                },
+                "链接地址": {
+                  "moduleId": 7735,
+                  "id": 14038,
+                  "name": "链接地址",
+                  "value": "http://groupon.m.showjoy.net"
+                },
+                "描述": {
+                  "moduleId": 7735,
+                  "id": 14126,
+                  "name": "描述",
+                  "value": "闪购"
+                }
+              }
+            }]
+        }
+      }
+    },
+    "isRedirect|0-1": 1,
+    "isSuccess|0-1": 1,
+    "login|0-1": 1
+  },
+  "responseError": {
+    "CODE": "5301"
+  }
+}

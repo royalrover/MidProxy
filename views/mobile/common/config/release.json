@@ -1,0 +1,44 @@
+{
+  "app.env": "release",
+  "isTestEnv": false,
+  "cdnUrl": "http://cdn1.showjoy.com",
+  "gv_assetsRoot": "/assets",
+  "gv_isInEvent": false,
+  "gv_apiRoot": "/api",
+  "gv_imgRoot": "/assets/img",
+  "gv_vendorRoot": "http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.15",
+  "gv_commonRoot": "http://cdn1.showjoy.com/assets/f2e/showjoy-assets/common-p/0.0.6",
+  "gv_commonMobileRoot": "http://cdn1.showjoy.com/assets/f2e/showjoy-assets/common-m/0.0.6.2",
+  "loginServerName": "http://login.showjoy.com",
+  "mainServerName": "http://www.showjoy.com",
+  "mobileMainServerName": "http://m.showjoy.com",
+  "marketServerName": "http://market.showjoy.com",
+  "mobileMarketServerName": "http://market.m.showjoy.com",
+  "userServerName": "http://user.showjoy.com",
+  "mobileUserServerName": "http://user.m.showjoy.com",
+  "cartServerName": "http://cart.showjoy.com",
+  "mobileCartServerName": "http://cart.m.showjoy.com",
+  "tryServerName": "http://try.showjoy.com",
+  "mobileTryServerName": "http://try.m.showjoy.com",
+  "grouponServerName": "http://groupon.showjoy.com",
+  "mobileGrouponServerName": "http://groupon.m.showjoy.com",
+  "perfumeServerName": "http://perfume.showjoy.com",
+  "mobilePerfumeServerName": "http://perfume.m.showjoy.com",
+  "brandServerName": "http://brand.showjoy.com",
+  "mobileBrandServerName": "http://brand.m.showjoy.com",
+  "productServerName": "http://item.showjoy.com",
+  "mobileProductServerName": "http://item.m.showjoy.com",
+  "tradeServerName": "http://trade.showjoy.com",
+  "mobileTradeServerName": "http://trade.m.showjoy.com",
+  "listServerName": "http://list.showjoy.com",
+  "mobileListServerName": "http://list.m.showjoy.com",
+  "commentServerName": "http://comment.showjoy.com",
+  "mobileCommentServerName": "http://comment.m.showjoy.com",
+  "balanceServerName": "http://balance.showjoy.com",
+  "gServerName": "http://g.showjoy.com"
+}
+
+
+
+
+

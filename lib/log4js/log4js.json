@@ -1,0 +1,16 @@
+{
+  "customBaseDir" :"/tmp/log4js/",
+  "customDefaultAtt" :{
+    "type": "dateFile",
+    "absolute": true,
+    "alwaysIncludePattern": true
+  },
+  "appenders": [
+    {"pattern": "/yyyyMMddhh.txt", "category": "logDebug","filename": "debug"},
+    {"pattern": "/yyyyMMddhh.txt", "category": "logInfo","filename": "info"},
+    {"pattern": "/yyyyMMddhh.txt", "category": "logWarn","filename": "warn"},
+    {"pattern": "/yyyyMMddhh.txt", "category": "logErr","filename": "err"}
+  ],
+  "replaceConsole": true,
+  "levels":{ "logDebug": "DEBUG", "logInfo": "DEBUG", "logWarn": "DEBUG", "logErr": "DEBUG"}
+}

@@ -1,5 +1,5 @@
 {
-  "customBaseDir" :"/tmp/log4js/",
+  "customBaseDir" :"/home/log4js/",
   "customDefaultAtt" :{
     "type": "dateFile",
     "absolute": true,

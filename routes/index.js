@@ -3,6 +3,7 @@ var router = require('koa-router')();
 var path = require('path');
 var template = require('art-template');
 var thunkify = require('thunkify');
+var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
 
 template.config('extname', '.tmpl');
 
@@ -30,12 +31,10 @@ router.get('/m',function* (next){
   });
 
   var renderObj,html;
-
+  renderObj = {
+    commonEnv: this.EnvConfig['common_dev']
+  };
   if(ret instanceof Error){
-    renderObj = {
-      commonEnv: this.EnvConfig['common_dev']
-    };
-
     html = this._cache._commonError50xRender(renderObj);
   }else{
     renderObj = {
@@ -56,9 +55,21 @@ router.get('/m',function* (next){
       endTime: ret[0].data.grouponVOs.length && new Date(ret[0].data.grouponVOs[0]['endTime']).getTime() //用于首页限时特卖倒计时
     };
 
-    html = this._cache._commonBasicHeadRender(renderObj) + this._cache._commonHeaderRender(renderObj)
-      + this._cache._commonChannelHomePageRender(renderObj)
-      + this._cache._commonFooterRender(renderObj) + this._cache._commonChannelFootRender(renderObj);
+    try {
+      html = this._cache._commonBasicHeadRender(renderObj) + this._cache._commonHeaderRender(renderObj)
+        + this._cache._channelHomePageRender(renderObj)
+        + this._cache._commonFooterRender(renderObj) + this._cache._channelFootRender(renderObj);
+      log.info('request[id=' + this.id + '] template render with commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
+    }catch(e){
+      log.info('request[id=' + this.id + '] render encountered an error when use some templates among commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
+      renderObj = {
+        commonEnv: this.EnvConfig['common_dev']
+      };
+
+      html = this._cache._commonError50xRender(renderObj);
+      log.error('request[id=' + this.id + '] render encountered an error, ' + e.message);
+    }
+
   }
 
 //  var html = template(path.join(__dirname,'../views/mobile/channel/abc'),{name: 'yangli',time: 'Fri Jun 17 2016 16:00:15 GMT+0800 (CST)'})

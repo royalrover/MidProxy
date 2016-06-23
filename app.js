@@ -12,9 +12,9 @@ var router = require('./routes/index');
 var path = require('path');
 var fs = require('fs');
 var MidProxy = require('./lib/proxy/midproxy');
-var envConfig = require('./midwares/envConfigMidware');
-
-var cwd = process.cwd();
+var envConfig = require('./lib/config').config();
+var uaDetector = require('./midwares/uaDetector');
+var logTrace = require('./midwares/logTrace');
 
 var app = koa();
 var cache = {};
@@ -25,8 +25,8 @@ var preHandle = function(){
   cache._commonHeaderRender = template.compile(fs.readFileSync('views/mobile/common/header.tmpl','utf8'));
   cache._commonStaticRender = template.compile(fs.readFileSync('views/mobile/common/static.tmpl','utf8'));
   cache._commonFooterRender = template.compile(fs.readFileSync('views/mobile/common/footer.tmpl','utf8'));
-  cache._commonChannelHomePageRender = template.compile(fs.readFileSync('views/mobile/channel/homepage/homepage.tmpl','utf8'));
-  cache._commonChannelFootRender = template.compile(fs.readFileSync('views/mobile/channel/foot.tmpl','utf8'));
+  cache._channelHomePageRender = template.compile(fs.readFileSync('views/mobile/channel/homepage/homepage.tmpl','utf8'));
+  cache._channelFootRender = template.compile(fs.readFileSync('views/mobile/channel/foot.tmpl','utf8'));
   cache._commonError50xRender = template.compile(fs.readFileSync('views/mobile/common/error/50x.tmpl','utf8'));
 };
 
@@ -36,21 +36,37 @@ preHandle();
 MidProxy.init( './api/interface_online.json' );
 
 // 绑定到上下文 EnvConfig属性
-app.use(envConfig.config);
-// HTTP Header: X-Response-Time
-app.use(responseTime());
-// gzip
-app.use(gzip());
+//app.use(envConfig.config);
+
+
+// TODO：针对每个req做跟踪，时间记录、终端记录、
+
 // binding “id” to context
 app.use(reqId());
+
+// 请求UA判断
+app.use(uaDetector.exec);
+
+// 日志跟踪
+app.use(logTrace.trace);
+
+// HTTP Header: X-Response-Time
+app.use(responseTime());
+
+// gzip
+app.use(gzip());
+
+
+// 静态文件夹
 app.use(staticm('./static'));
+
+// 解析body
 app.use(koaBody({formidable:{uploadDir: __dirname}}));
+
+// 绑定模版到请求上下文
 app.use(function* (next){
-  var ua = this.header['user-agent'];
-  if(ua.indexOf('ShowJoyiOS') > -1 || ua.indexOf('ShowJoyAndroid') > -1 || ua.indexOf('iOSAPP') > -1 || ua.indexOf('androidAPP') > -1){
-    this.isApp = true;
-  }
-  this.isApp = false;
+  this.isApp = this.ua.isApp;
+  this.EnvConfig = envConfig;
   this._cache = cache;
   yield next;
 });

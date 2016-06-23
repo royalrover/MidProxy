@@ -59,15 +59,15 @@ router.get('/m',function* (next){
       html = this._cache._commonBasicHeadRender(renderObj) + this._cache._commonHeaderRender(renderObj)
         + this._cache._channelHomePageRender(renderObj)
         + this._cache._commonFooterRender(renderObj) + this._cache._channelFootRender(renderObj);
-      log.info('request[id=' + this.id + '] template render with commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
+      log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] template render with commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
     }catch(e){
-      log.info('request[id=' + this.id + '] render encountered an error when use some templates among commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
+      log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error when use some templates among commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
       renderObj = {
         commonEnv: this.EnvConfig['common_dev']
       };
 
       html = this._cache._commonError50xRender(renderObj);
-      log.error('request[id=' + this.id + '] render encountered an error, ' + e.message);
+      log.error('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error, ' + e.message);
     }
 
   }

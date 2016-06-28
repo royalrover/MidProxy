@@ -19,6 +19,9 @@ var logTrace = require('./midwares/logTrace');
 var app = koa();
 var cache = {};
 
+// 当前运行环境
+var env = process.argv[2];
+
 // 预编译views/mobile/common/* 的模板
 var preHandle = function(){
   cache._commonBasicHeadRender = template.compile(fs.readFileSync('views/mobile/common/basicHead.tmpl','utf8'));
@@ -33,7 +36,7 @@ var preHandle = function(){
 preHandle();
 
 // 初始化modelproxy接口文件
-MidProxy.init( './api/interface_online.json' );
+MidProxy.init( './api/interface_mock.json' );
 
 // 绑定到上下文 EnvConfig属性
 //app.use(envConfig.config);
@@ -68,6 +71,7 @@ app.use(function* (next){
   this.isApp = this.ua.isApp;
   this.EnvConfig = envConfig;
   this._cache = cache;
+  this.env = env;
   yield next;
 });
 

@@ -3,7 +3,9 @@ var router = require('koa-router')();
 var path = require('path');
 var template = require('art-template');
 var thunkify = require('thunkify');
+var through = require('through');
 var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
+var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
 
 template.config('extname', '.tmpl');
 
@@ -34,6 +36,7 @@ router.get('/m',function* (next){
   renderObj = {
     commonEnv: this.EnvConfig['common_dev']
   };
+
   if(ret instanceof Error){
     html = this._cache._commonError50xRender(renderObj);
   }else{
@@ -41,8 +44,8 @@ router.get('/m',function* (next){
       homePage: ret[0].data,
       wxJsSdkConfig: ret[1].data,
       pageName: 'homepage',
-      commonEnv: this.EnvConfig['common_dev'],
-      channelEnv: this.EnvConfig['channel_dev'],
+      commonEnv: this.EnvConfig['common_' + this.env],
+      channelEnv: this.EnvConfig['channel_' + this.env],
       itemId: null,
       useWXSDK: true,
       isApp: this.isApp,
@@ -72,9 +75,10 @@ router.get('/m',function* (next){
 
   }
 
-//  var html = template(path.join(__dirname,'../views/mobile/channel/abc'),{name: 'yangli',time: 'Fri Jun 17 2016 16:00:15 GMT+0800 (CST)'})
-//  this.set('Transfer-Encoding','chunked');
-  ctx.body = html;
+  this.type = 'html';
+  var stream = new View();
+  stream.end(html);
+  this.body = stream;
 });
 
 module.exports = router;

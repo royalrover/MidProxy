@@ -16,6 +16,17 @@
         "isCookieNeeded": true,
         "isRuleStatic": false
     },{
+        "name": "获取mobile主页的wechat配置信息",
+        "id": "Mobile.getWechatInfo",
+        "urls": {
+            "online": "http://localhost:8080/Showjoy-Channel-UI/api/m/home/getWechatInfo"
+        },
+        "method": "get",
+        "dataType": "json",
+        "encoding": "utf8",
+        "isCookieNeeded": true,
+        "isRuleStatic": false
+    },{
         "name": "我的购物车",
         "id": "Cart.getMyCart",
         "urls": {

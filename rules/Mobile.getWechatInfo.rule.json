@@ -1,0 +1,23 @@
+{
+  "request": {
+    "keywords": "",
+    "catId|100000-999999": 1
+  },
+  "response": {
+    "count|0-1": 1,
+    "data|1-10": {
+      "id|+1": 187,
+      "debug": "false",
+      "timestamp": "1467086800",
+      "nonceStr": "25c6bdde-4bf0-494f-a113-5d8c7779b326",
+      "signature": "0ecb2038cc637f026cf3c32560cb38f52bb38588",
+      "jsApiList": "'checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','hideMenuItems','showMenuItems','hideAllNonBaseMenuItem','showAllNonBaseMenuItem','translateVoice','startRecord','stopRecord','onRecordEnd','playVoice','pauseVoice','stopVoice','uploadVoice','downloadVoice','chooseImage','previewImage','uploadImage','downloadImage','getNetworkType','openLocation','getLocation','hideOptionMenu','showOptionMenu','closeWindow','scanQRCode','chooseWXPay','openProductSpecificView','addCard','chooseCard','openCard'"
+    },
+    "isRedirect|0-1": 1,
+    "isSuccess|0-1": 1,
+    "login|0-1": 1
+  },
+  "responseError": {
+    "CODE": "5301"
+  }
+}

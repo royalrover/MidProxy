@@ -1,5 +1,8 @@
 'use strict';
 
+// 设置全局每个EventEmitter实例的最大Handler为200
+// 在侦听多个进程的资源利用率时，loop循环中
+require('events').EventEmitter.prototype._maxListeners = 200;
 var pidusage   = require('pidusage');
 var async = require('async');
 var fs = require('fs');

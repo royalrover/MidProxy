@@ -3,7 +3,6 @@ var router = require('koa-router')();
 var path = require('path');
 var template = require('art-template');
 var thunkify = require('thunkify');
-var through = require('through');
 var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
 

@@ -1,5 +1,5 @@
 {
-    "title": "midProxy interface configuration",
+    "title": "MidProxy接口配置",
     "version": "0.0.1",
     "engine": "mockjs",
     "rulebase": "./rules/",
@@ -61,8 +61,5 @@
         },
         "method": "post",
         "dataType": "text"
-    } ],
-    "combo": {
-        "getMyData": [ "Cart.getCart", "Search.suggest" ]
-    }
+    } ]
 }

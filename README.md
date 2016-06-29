@@ -14,40 +14,40 @@ node bin/monitor.js
 
 ## 目录介绍
 
-[midproxy]
-  | -- [api]
-         | -- interface_*.json
-  | -- [bin]
-         | -- exec.js 入口
-         | -- monitor.js 监控点
-  | -- lib
-  | -- midwares
-  | -- public
-  | -- [routes]
-         | -- index.js 主逻辑入口
-  | -- [rules]
-         | -- [channel]
-                | -- Mobile.getInfo.rule.json
-                | -- Mobile.getWechatInfo.rule.json
-  | -- tests
-  | -- tmp
-  | -- [views]
-         | -- [mobile]
-                | -- [channel]
-                        | -- [config]
-                                | -- dev.json
-                                | -- release.json
-                        | -- [homepage]
-                                | -- homepage.tmpl
-                        | -- foot.tmpl
-                | -- [common]
-                        | -- [config]
-                                | -- dev.json
-                                | -- release.json
-                        | -- [error]
-                                | -- 50x.tmpl
-                        | -- basicHead.tmpl
-                        | -- footer.tmpl
-                        | -- header.tmpl
-                        | -- static.tmpl
-  | -- app.js
+[midproxy]\n
+  | -- [api]\n
+  |      | -- interface_*.json\n
+  | -- [bin]\n
+  |      | -- exec.js 入口\n
+  |      | -- monitor.js 监控点\n
+  | -- lib\n
+  | -- midwares\n
+  | -- public\n
+  | -- [routes]\n
+  |      | -- index.js 主逻辑入口\n
+  | -- [rules]\n
+  |      | -- [channel]\n
+  |      |      | -- Mobile.getInfo.rule.json\n
+  |      |      | -- Mobile.getWechatInfo.rule.json\n
+  | -- tests\n
+  | -- tmp\n
+  | -- [views]\n
+  |      | -- [mobile]\n
+  |      |      | -- [channel]\n
+  |      |      |       | -- [config]\n
+  |      |      |       |       | -- dev.json\n
+  |      |      |       |       | -- release.json\n
+  |      |      |       | -- [homepage]\n
+  |      |      |       |       | -- homepage.tmpl\n
+  |      |      |       | -- foot.tmpl\n
+  |      |      | -- [common]\n
+  |      |      |       | -- [config]\n
+  |      |      |       |       | -- dev.json\n
+  |      |      |       |       | -- release.json\n
+  |      |      |       | -- [error]\n
+  |      |      |       |       | -- 50x.tmpl\n
+  |      |      |       | -- basicHead.tmpl\n
+  |      |      |       | -- footer.tmpl\n
+  |      |      |       | -- header.tmpl\n
+  |      |      |       | -- static.tmpl\n
+  | -- app.js\n

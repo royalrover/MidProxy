@@ -17,7 +17,7 @@ router.get('/m',function* (next){
   proxy
     .getInfo()
     .getWechatInfo()
-    .withCookie('abc=yangli');
+    .withCookie(this.request.header['cookie']);
   // ret format:
   // [data1,data2,data3 ... [cookie]]
 
@@ -50,7 +50,7 @@ router.get('/m',function* (next){
       isApp: this.isApp,
       login: ret[0].login,
       switchToNew: true, //WAP2.0一期开关
-      service: "http://m.showjoy.com",
+      service: "http://m.showjoy.net",
       loginRedirectUri: "/",
       hasSwitch: true, // 显示电脑端和移动端切换的footer部分，用在公共脚部,
       serverTime: new Date(ret[0].data.now).getTime(), // 用于首页限时特卖倒计时
@@ -75,9 +75,24 @@ router.get('/m',function* (next){
   }
 
   this.type = 'html';
-  var stream = new View();
-  stream.end(html);
-  this.body = stream;
+
+  // 方法一，实现Readable的子类View
+  //var stream = new View();
+  //stream.end(html);
+  //this.body = stream;
+
+  // 方法二，使用Stream类
+  var through = require('through');
+  var s = through();
+  // through对象的逻辑是，创建一个flowing的读写流，一旦调用
+  // write（end）函数，立即出发data事件，除非调用pause函数
+  // 切换读模式，因此进行异步注入数据
+  process.nextTick(function(){
+    s.write(html);
+    s.end();
+  });
+  this.body = s;
+
 });
 
 module.exports = router;

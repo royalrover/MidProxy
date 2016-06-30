@@ -36,7 +36,7 @@ var preHandle = function(){
 preHandle();
 
 // 初始化modelproxy接口文件
-MidProxy.init( './api/interface_mock.json' );
+MidProxy.init( './api/interface_online.json' );
 
 // 绑定到上下文 EnvConfig属性
 //app.use(envConfig.config);

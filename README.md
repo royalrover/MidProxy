@@ -2,15 +2,19 @@
 
 ## 使用方法
 
+```
 cd midproxy
 
 node bin/exec.js -env dev
+```
 
 ## 性能监控
 
+```
 cd midproxy
 
 node bin/monitor.js
+```
 
 ## 目录介绍
 

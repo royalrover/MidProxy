@@ -32,6 +32,7 @@
     "multimeter": "^0.1.1",
     "pidusage": "^1.0.1",
     "serve-favicon": "~2.3.0",
+    "through": "^2.3.8",
     "thunkify": "^2.1.2"
   },
   "devDependencies": {

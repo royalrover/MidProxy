@@ -10,7 +10,7 @@ var pids = [];
 cfork({
   exec: path.join(__dirname, '../app.js'),
   duration: 60000,
-  args: [process.argv[3]] // midProxy运行环境  cmd: node bin/exec.js -e dev
+  args: [process.argv[3],process.argv[4]] // midProxy运行环境  cmd: node bin/exec.js -e dev online(mock)
 })
   .on('fork', function (worker) {
     var pid = worker.process.pid;
@@ -18,12 +18,13 @@ cfork({
       pids.push(pid);
     }
     logger.info('[' + Date() + '] [worker:' + pid + '] new worker start');
-
-    fs.writeFile('tmp/pids',JSON.stringify(pids),'utf8',function(err){
-      if(err){
-        logger.error('[' + Date() + '] [worker:' + pid + '] pid serialize error when fork state');
-      }
-    });
+    console.log('fork....');
+    console.dir(pids);
+    //fs.writeFile('tmp/pids',JSON.stringify(pids),'utf8',function(err){
+    //  if(err){
+    //    logger.error('[' + Date() + '] [worker:' + pid + '] pid serialize error when fork state');
+    //  }
+    //});
   })
   .on('listening', function (worker, address) {
     logger.info('[' + Date() + '] [worker:'+ worker.process.pid +'] listening on '+ address.port);
@@ -36,9 +37,10 @@ cfork({
     var exitCode = worker.process.exitCode;
     var cid = worker.process.pid,ind = pids.indexOf(cid);
     if(ind !== -1){
-      pids = pids.splice(1,ind);
+      pids.splice(ind,1);
     }
-
+console.log('exit....');
+console.dir(pids);
     fs.writeFile('tmp/pids',JSON.stringify(pids),'utf8',function(err){
       if(err){
         logger.error('[' + Date() + '] [worker:' + pid + '] pid serialize error when exit state');

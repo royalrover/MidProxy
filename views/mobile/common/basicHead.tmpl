@@ -54,14 +54,43 @@
 	{{if useWXSDK}}
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script>
-      wx.config({
-          debug: false,
-          appId: 'wx6445a3a7da24ef44',
-          timestamp: {{wxJsSdkConfig.timestamp}},
-          nonceStr: '{{wxJsSdkConfig.nonceStr}}',
-          signature: '{{wxJsSdkConfig.signature}}',
-          jsApiList: [{{#wxJsSdkConfig.jsApiList}}]
-      });
+ 	  function asyncLoad(src) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      function DO(){
+		  this.cbs = [];
+	  }
+	  DO.prototype.on = function(k,cb){
+		  if(!this.cbs[k]) {
+			  this.cbs[k] = [];
+		  }
+		  this.cbs[k].push(cb);
+	  };
+	  DO.prototype.do = function(k,data){
+		  if(!this.cbs[k])
+		  return;
+		  var cbs = this.cbs[k],len = cbs.length;
+		  for(var i=0;i<len;i++){
+			  cbs[i].call(this,data);
+		  }
+	  };
+
+	  asyncLoad('http://127.0.0.1:8112/getWechatConfig');
+
+	  var d = new DO();
+	  d.on('wechatConfig-ready',function(config){
+		  wx.config({
+			debug: false,
+			appId: 'wx6445a3a7da24ef44',
+			timestamp: config.timestamp,
+			nonceStr: config.nonceStr,
+			signature: config.signature,
+			jsApiList: [config.jsApiList]
+		  });
+	  });
     </script>
 	{{/if}}
 

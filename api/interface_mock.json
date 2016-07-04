@@ -10,7 +10,7 @@
         "method": "get",
         "dataType": "json",
         "encoding": "utf8",
-        "isCookieNeeded": true,
+        "isCookieNeeded": false,
         "isRuleStatic": false,
         "ruleFile": "channel/Mobile.getInfo.rule.json"
     },{
@@ -19,7 +19,7 @@
         "method": "get",
         "dataType": "json",
         "encoding": "utf8",
-        "isCookieNeeded": true,
+        "isCookieNeeded": false,
         "isRuleStatic": false,
         "ruleFile": "channel/Mobile.getWechatInfo.rule.json"
     },{

@@ -21,6 +21,7 @@ var cache = {};
 
 // 当前运行环境
 var env = process.argv[2];
+var mock = (process.argv[3] == 'mock' || process.argv[3] == undefined) ? 'mock' : 'online';
 
 // 预编译views/mobile/common/* 的模板
 var preHandle = function(){
@@ -36,7 +37,7 @@ var preHandle = function(){
 preHandle();
 
 // 初始化modelproxy接口文件
-MidProxy.init( './api/interface_online.json' );
+MidProxy.init( './api/interface_' + mock + '.json' );
 
 // 绑定到上下文 EnvConfig属性
 //app.use(envConfig.config);

@@ -5,7 +5,7 @@
 ```
 cd midproxy
 
-node bin/exec.js -env dev
+node bin/exec.js -env dev online(mock)
 ```
 
 ## 性能监控

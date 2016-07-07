@@ -4,22 +4,11 @@
     "engine": "mockjs",
     "rulebase": "./rules/",
     "status": "online",
-    "interfaces": [ {
-        "name": "获取mobile主页信息",
-        "id": "Mobile.getInfo",
-        "urls": {
-            "online": "http://127.0.0.1:8080/m/api/home/getInfo"
-        },
-        "method": "get",
-        "dataType": "json",
-        "encoding": "utf8",
-        "isCookieNeeded": false,
-        "isRuleStatic": false
-    },{
+    "interfaces": [{
         "name": "获取mobile主页的wechat配置信息",
         "id": "Mobile.getWechatInfo",
         "urls": {
-            "online": "http://127.0.0.1:8080/m/api/home/getWechatInfo"
+            "online": "http://0.0.0.0:8080/m/api/home/getWechatInfo"
         },
         "method": "get",
         "dataType": "json",

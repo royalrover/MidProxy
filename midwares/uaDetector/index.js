@@ -26,5 +26,5 @@ exports.exec = function* (next){
     }
   }
 
-  yield next;
+  yield* next;
 };

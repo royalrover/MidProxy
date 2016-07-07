@@ -4,9 +4,11 @@ var path = require('path');
 var fs = require('fs');
 var util = require('util');
 var cfork = require('cfork');
+var cpus = require('os').cpus().length;
 var logger = require('../lib/log4js/logger');
 
 var pids = [];
+var count = 0;
 cfork({
   exec: path.join(__dirname, '../app.js'),
   duration: 60000,
@@ -17,14 +19,16 @@ cfork({
     if(pids.indexOf(pid) == -1){
       pids.push(pid);
     }
+    count++;
     logger.info('[' + Date() + '] [worker:' + pid + '] new worker start');
-    console.log('fork....');
-    console.dir(pids);
-    //fs.writeFile('tmp/pids',JSON.stringify(pids),'utf8',function(err){
-    //  if(err){
-    //    logger.error('[' + Date() + '] [worker:' + pid + '] pid serialize error when fork state');
-    //  }
-    //});
+
+    if(count == cpus){
+      fs.writeFile('tmp/pids',JSON.stringify(pids),'utf8',function(err){
+        if(err){
+          logger.error('[' + Date() + '] [worker:' + pid + '] pid serialize error when fork state');
+        }
+      });
+    }
   })
   .on('listening', function (worker, address) {
     logger.info('[' + Date() + '] [worker:'+ worker.process.pid +'] listening on '+ address.port);
@@ -39,8 +43,7 @@ cfork({
     if(ind !== -1){
       pids.splice(ind,1);
     }
-console.log('exit....');
-console.dir(pids);
+
     fs.writeFile('tmp/pids',JSON.stringify(pids),'utf8',function(err){
       if(err){
         logger.error('[' + Date() + '] [worker:' + pid + '] pid serialize error when exit state');

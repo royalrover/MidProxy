@@ -1,0 +1,19 @@
+{
+    "title": "MidProxy接口配置",
+    "version": "0.0.1",
+    "engine": "mockjs",
+    "rulebase": "./rules/",
+    "status": "online",
+    "interfaces": [ {
+        "name": "获取mobile主页信息",
+        "id": "Mobile.getInfo",
+        "urls": {
+            "online": "http://0.0.0.0:8080/m/api/home/getInfo"
+        },
+        "method": "get",
+        "dataType": "json",
+        "encoding": "utf8",
+        "isCookieNeeded": false,
+        "isRuleStatic": false
+    }]
+}

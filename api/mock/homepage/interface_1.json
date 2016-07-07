@@ -5,15 +5,6 @@
     "rulebase": "./rules/",
     "status": "mock",
     "interfaces": [ {
-        "name": "获取mobile主页信息",
-        "id": "Mobile.getInfo",
-        "method": "get",
-        "dataType": "json",
-        "encoding": "utf8",
-        "isCookieNeeded": false,
-        "isRuleStatic": false,
-        "ruleFile": "channel/Mobile.getInfo.rule.json"
-    },{
         "name": "获取mobile主页的wechat配置信息",
         "id": "Mobile.getWechatInfo",
         "method": "get",

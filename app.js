@@ -36,8 +36,10 @@ var preHandle = function(){
 
 preHandle();
 
-// 初始化modelproxy接口文件
-MidProxy.init( './api/interface_' + mock + '.json' );
+// 初始化modelproxy接口文件,可初始化多份接口文件
+MidProxy.init( './api/'+ mock +'/homepage/interface_1.json' );
+MidProxy.init( './api/'+ mock +'/homepage/interface_2.json' );
+
 
 // 绑定到上下文 EnvConfig属性
 //app.use(envConfig.config);
@@ -73,7 +75,7 @@ app.use(function* (next){
   this.EnvConfig = envConfig;
   this._cache = cache;
   this.env = env;
-  yield next;
+  yield* next;
 });
 
 app.use(router.routes());

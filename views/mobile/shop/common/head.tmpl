@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="dns-prefetch" href="{{commonEnv.cdnUrl}}">
+	<meta name="format-detection" content="telephone=no,email=no">
+	<meta name="apple-touch-fullscreen" content="yes">
+	<link rel="apple-touch-icon" href="{{commonEnv.cdnUrl}}/images/10/10d9270e34a640db804a8f6f453df597.png">
+	<meta name="apple-mobile-web-app-title" content="尚妆达人店">
+	<meta name="keywords" content="{{commonEnv.keywords}}" />
+	<meta name="description" content="{{commonEnv.description}}"/>
+	<meta name="alexaVerifyID" content="CQ9MFqujDWRsB8dm3rfIrhLYva0" />
+
+	<!-- 页面公共样式脚本 -->
+	{{if shopEnv.isTestEnv}}
+		<link rel="stylesheet" type="text/css" href="http://assets.showjoy.net/joyf2e/vendor/gmu/reset.css" />
+		<link rel="stylesheet" type="text/css" href="http://assets.showjoy.net/joyf2e/vendor/gmu/gmu.min.css" />
+	{{else}}
+		<link rel="stylesheet" type="text/css" href="http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/reset.css" />
+		<link rel="stylesheet" type="text/css" href="http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/gmu.min.css" />
+
+	{{/if}}
+
+	<link href="{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.css" rel="stylesheet" />
+
+	<link href="{{shopEnv.gv_wapPageRoot}}/shop-footer/shop-footer.min.css" rel="stylesheet" />
+
+
+	<title>{{shopName}}</title>
+
+	<!-- viewport 设置 -->
+	<script>
+	var u = navigator.userAgent;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
+	var placeholderDiv = document.createElement('div');
+	if (isAndroid) {
+		placeholderDiv.innerHTML = "<meta name='viewport' content='width=375' />";
+	} else{
+		placeholderDiv.innerHTML = "<meta name='viewport' content='width=375, user-scalable=no' />";
+	}
+	document.querySelector('head').insertBefore(placeholderDiv.firstChild, document.querySelector('title'));
+	</script>
+
+	<link href="{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+<script type="text/javascript">
+  var $appendContainer = document.body;
+  var placeholderDiv = document.createElement('div');
+  placeholderDiv.innerHTML = '<div class="joy-ui-sync-loading">'+
+              '<div class="content-box">'+
+                  '<div class="circle"></div>'+
+              '</div>'+
+          '</div>';
+  var childDiv = placeholderDiv.firstChild;
+  $appendContainer.appendChild(childDiv);
+
+  window.addEventListener('DOMContentLoaded', function () {
+    document.body.removeChild(childDiv);
+  }, false);
+</script>
+<div id="layout" class="j_Layout">
+    <input type="hidden" class="j_ShopUserImage" value="{{userImage}}">
+    <input type="hidden" class="j_ShopName" value="{{shopName}}">
+	{{if pageName == "itemDetail" || pageName == "grouponDetail" || pageName == "invitation"}}
+	    <input type="hidden" class="j_ShopUrl" value="" />
+	{{else}}
+	    {{if shopId && shopId > 0}}
+	        <input type="hidden" class="j_ShopUrl" value="{{commonEnv.mobileShopServerName}}/shop?shopId={{shopId}}" />
+	    {{else if myShopId > 0}}
+	        <input type="hidden" class="j_ShopUrl" value="{{commonEnv.mobileShopServerName}}/shop?shopId={{myShopId}}" />
+	        {{else}}
+	        <input type="hidden" class="j_ShopUrl" value="{{commonEnv.mobileShopServerName}}/shop" />
+	    {{/if}}
+	{{/if}}

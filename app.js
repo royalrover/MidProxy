@@ -15,6 +15,7 @@ var MidProxy = require('./lib/proxy/midproxy');
 var envConfig = require('./lib/config').config();
 var uaDetector = require('./midwares/uaDetector');
 var logTrace = require('./midwares/logTrace');
+var errorHandler = require('./midwares/error');
 
 var app = koa();
 var cache = {};
@@ -31,14 +32,56 @@ var preHandle = function(){
   cache._commonFooterRender = template.compile(fs.readFileSync('views/mobile/common/footer.tmpl','utf8'));
   cache._channelHomePageRender = template.compile(fs.readFileSync('views/mobile/channel/homepage/homepage.tmpl','utf8'));
   cache._channelFootRender = template.compile(fs.readFileSync('views/mobile/channel/foot.tmpl','utf8'));
+
+  // 大人店公共头尾部
+  cache._shopCommonHeadRender = template.compile(fs.readFileSync('views/mobile/shop/common/head.tmpl','utf8'));
+  cache._shopCommonHeaderRender = template.compile(fs.readFileSync('views/mobile/shop/common/header.tmpl','utf8'));
+  cache._shopCommonFootRender = template.compile(fs.readFileSync('views/mobile/shop/common/foot.tmpl','utf8'));
+  cache._shopCommonFooterRender = template.compile(fs.readFileSync('views/mobile/shop/common/footer.tmpl','utf8'));
+  // 店铺升级页面
+  cache._shopUpgradeRender = template.compile(fs.readFileSync('views/mobile/shop/upgrade/shop-upgrade-home.tmpl','utf8'));
+
+  // 错误页面预编译
   cache._commonError50xRender = template.compile(fs.readFileSync('views/mobile/common/error/50x.tmpl','utf8'));
+  cache._commonError404Render = template.compile(fs.readFileSync('views/mobile/common/error/404.tmpl','utf8'));
 };
 
 preHandle();
 
+// 绑定环境到app实例
+app.env = env;
+
+// 绑定模板缓存到app实例
+app._cache = cache;
+
+// 绑定相关配置文件到app实例
+app.EnvConfig = envConfig;
+
+// 绑定50x处理函数到app实例
+app.error50x = function(error){
+  this._error = error;
+  this.status = 500;
+};
+
+// 设置set-cookie操作，在所有返回页面试图前都需调用
+app.setCookie = function(ret,ctx){
+  ret.pop().forEach(function(setCookie){
+    ctx.set('Set-Cookie',setCookie);
+  });
+};
+
+// 针对OAuth操作，做重定向
+app.redirect = function(headers,ctx){
+  ctx.status = 302;
+  ctx.set('Location',headers['location']);
+  ctx.set('Content-Length',headers['content-length']);
+};
+
 // 初始化modelproxy接口文件,可初始化多份接口文件
+MidProxy.init( './api/'+ mock +'/OAuth/interface_oauth.json' );
 MidProxy.init( './api/'+ mock +'/homepage/interface_1.json' );
 MidProxy.init( './api/'+ mock +'/homepage/interface_2.json' );
+MidProxy.init( './api/'+ mock +'/shop/interface_shop.json' );
 
 
 // 绑定到上下文 EnvConfig属性
@@ -69,17 +112,11 @@ app.use(staticm('./static'));
 // 解析body
 app.use(koaBody({formidable:{uploadDir: __dirname}}));
 
-// 绑定模版到请求上下文
-app.use(function* (next){
-  this.isApp = this.ua.isApp;
-  this.EnvConfig = envConfig;
-  this._cache = cache;
-  this.env = env;
-  yield* next;
-});
-
 app.use(router.routes());
 
+app.use(errorHandler.error404);
+
+app.use(errorHandler.error50x);
 
 log.info("listening on port 8112");
 var server = app.listen(8112);

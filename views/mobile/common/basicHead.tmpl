@@ -10,8 +10,8 @@
 	<meta name="apple-touch-fullscreen" content="yes">
 	<link rel="apple-touch-icon" href="{{commonEnv.cdnUrl}}/images/10/10d9270e34a640db804a8f6f453df597.png">
 	<meta name="apple-mobile-web-app-title" content="尚妆">
-	<meta name="keywords" content="{{homePage.pageBO.keywords}}" />
-	<meta name="description" content="{{homePage.pageBO.description}}"/>
+	<meta name="keywords" content="{{commonEnv.keywords}}" />
+	<meta name="description" content="{{commonEnv.description}}"/>
 	<meta name="alexaVerifyID" content="CQ9MFqujDWRsB8dm3rfIrhLYva0" />
 	
 	{{if pageName == "homepage"}}
@@ -92,10 +92,14 @@
 		  });
 		  console.log(config);
 	  });
+
+	  d.on('wechatConfig-error',function(){
+        alert('微信接口请求错误，请刷新页面');
+      });
     </script>
 	{{/if}}
 
-	<title>{{homePage.pageBO.title}}</title>
+	<title>{{title}}</title>
 
 	<!--viewport 设置 -->
 	<script>

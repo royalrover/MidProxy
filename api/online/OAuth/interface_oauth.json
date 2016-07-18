@@ -5,13 +5,13 @@
     "rulebase": "./rules/",
     "status": "online",
     "interfaces": [ {
-        "name": "获取mobile主页信息",
-        "id": "Mobile.getInfo",
-        "urls": {
-            "online": "http://localhost:8080/m/api/home/getInfo"
-        },
+        "name": "转发认证请求",
+        "id": "OAuth.send",
         "method": "get",
-        "dataType": "json",
+        "urls": {
+            "online": "http://localhost:8080/ticket_login"
+        },
+        "dataType": "raw",
         "encoding": "utf8",
         "isCookieNeeded": true,
         "isRuleStatic": false

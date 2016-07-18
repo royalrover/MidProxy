@@ -35,7 +35,9 @@
   "commentServerName": "http://comment.showjoy.com",
   "mobileCommentServerName": "http://comment.m.showjoy.com",
   "balanceServerName": "http://balance.showjoy.com",
-  "gServerName": "http://g.showjoy.com"
+  "gServerName": "http://g.showjoy.com",
+  "description": "尚妆网是国内知名化妆品正品销售平台,女性购买化妆品的首选网站,尚妆大牌云集专注于香水彩妆,个护化妆、香氛等品类,尚妆首创“先试后买”第一家支持全场免费试用的化妆品特卖网站。",
+  "keywords": "尚妆,云集网,化妆品免费试用,尚妆网,香水网站,化妆品特卖"
 }
 
 

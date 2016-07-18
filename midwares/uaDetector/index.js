@@ -19,7 +19,7 @@ exports.exec = function* (next){
       isShowjoyAndroid: u.indexOf('ShowJoyAndroid') > -1, //是否Android官方客户端内置浏览器
       isIOSAPP: u.indexOf('iOSAPP') > -1, // //是否iOS官方客户端内置浏览器
       isAndroidAPP: u.indexOf('androidAPP') > -1, //是否Android官方客户端内置浏览器
-      isApp: this.isShowjoyiOS || this.isShowjoyAndroid || this.isIOSAPP || this.isAndroidAPP
+      isApp: this.isShowjoyiOS || this.isShowjoyAndroid || this.isIOSAPP || this.isAndroidAPP || false
     };
   }else{
     this.ua = {

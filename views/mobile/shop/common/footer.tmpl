@@ -1,0 +1,12 @@
+<!-- 设置变量来控制active -->
+<div id="footer">
+	<div class="nav-box">
+	    <ul class="nav-ul">
+	        <a href="/shop{{if !fromOfficialAccount && shopId}}?shopId={{shopId}}{{/if}}"><li class="nav home {{if pageName == 'shop'}}active{{/if}} j_Home">首页</li></a>
+	        <a href="/search{{if !fromOfficialAccount}}?shopId={{shopId}}{{/if}}"><li class="nav cat {{if pageName == 'searchIndex'}}active{{/if}} j_Cat">分类</li></a>
+	        <a href="{{if myShopId}}/invitation{{else}}/introduce{{/if}}{{if !myShopId && shopId}}?shopId={{shopId}}{{/if}}"><li class="nav join {{if pageName == 'join' || pageName == 'invitation'}}active{{/if}} j_Join">{{if myShopId}}邀请开店{{else}}我要开店{{/if}}</li></a>
+	        <a href="/shopCart.html"><li class="nav cart {{if pageName == 'cart'}}active{{/if}} j_Cart">购物袋</li></a>
+	        <a href="/u/shop/info.html"><li class="nav user {{if pageName == 'userinfo'}}active{{/if}} j_User">我的</li></a>
+	    </ul>
+    </div>
+</div>

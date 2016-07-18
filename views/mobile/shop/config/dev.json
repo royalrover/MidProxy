@@ -1,9 +1,12 @@
 {
   "app.env": "debug",
   "isTestEnv": true,
-  "cdnUrl": "http://cdn1.showjoy.com/",
+  "security_synctoken": "enable",
   "gv_apiRoot": "/api",
+  "gv_imgRoot": "http://file.showjoy.com/assets/img",
   "gv_assetsServerName": "http://assets.showjoy.net",
+  "gv_wapPageRoot": "http://assets.showjoy.net/showjoy-assets/shop-m/build/src/pages",
+  "gv_pcPageRoot": "http://assets.showjoy.net/showjoy-assets/shop-p/build/src/pages",
   "gv_vendorRoot": "http://assets.showjoy.net/joyf2e/vendor",
   "gv_commonRoot": "http://assets.showjoy.net/showjoy-assets/common-p/build/src/pages",
   "gv_commonMobileRoot": "http://assets.showjoy.net/showjoy-assets/common-m/build/src/pages",
@@ -33,9 +36,9 @@
   "commentServerName": "http://comment.showjoy.net",
   "mobileCommentServerName": "http://comment.m.showjoy.net",
   "balanceServerName": "http://balance.showjoy.net",
-  "gServerName": "http://g.showjoy.net",
-  "description": "尚妆网是国内知名化妆品正品销售平台,女性购买化妆品的首选网站,尚妆大牌云集专注于香水彩妆,个护化妆、香氛等品类,尚妆首创“先试后买”第一家支持全场免费试用的化妆品特卖网站。",
-  "keywords": "尚妆,云集网,化妆品免费试用,尚妆网,香水网站,化妆品特卖"
+  "homeServerName": "http://www.showjoy.net",
+  "mobileHomeServerName": "http://m.showjoy.net",
+  "gServerName": "http://g.showjoy.net"
 }
 
 

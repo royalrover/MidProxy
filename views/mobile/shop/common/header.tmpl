@@ -1,0 +1,31 @@
+<div id="header" class="ui-toolbar j_Header">
+	<div class="ui-toolbar-wrap">
+		{{if pageName == "shop"}}
+		{{else}}
+ 		<div class="ui-toolbar-left j_GoBack">
+			<a class="ui-icon ui-icon-back" href="javascript:;"></a>
+		</div>
+		{{/if}}
+		<h1 class="ui-toolbar-title j_Title">{{title}}</h1>
+	    {{if pageName == "itemDetail" || pageName == "grouponDetail"}}
+			<div class="ui-toolbar-right">
+				<a class="ui-toolbar-right-btn" href="/shop{{if shopId}}?shopId={{shopId}}{{/if}}"><i class="ui-icon ui-icon-home"></i></a>
+			</div>
+		{{/if}}
+
+	</div>
+<!--
+	<div id="J_SearchToolbar" class="global-search">
+		<a class="ui-icon ui-icon-back j_GoBack" href="javascript:;"></a>
+		<form action="/search" method="get" class="search-form">
+			<span class="clear-content" id="J_ClearContent"></span>
+			<input type="hidden" name="shopId" value="{{shopId}}" />
+			<input type="hidden" name="type" value="{type}" />
+			<input class="search-input" name="keyword" type="text" placeholder="想买什么？搜搜看吧！">
+			<button type="submit" class="search-btn" id="J_CallSearchToolbar">
+			<i class="ui-icon ui-icon-search search-icon"></i>
+			<span class="search-text">搜索</span></button>
+		</form>
+	</div>
+-->
+</div>

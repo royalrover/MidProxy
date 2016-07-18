@@ -1,23 +1,60 @@
+/**
+ * description: 主控制器逻辑
+ * @type {MidProxy|exports|module.exports}
+ */
+'use strict';
+
 var MidProxy = require('../lib/proxy/midproxy');
 var router = require('koa-router')();
 var path = require('path');
 var template = require('art-template');
 var thunkify = require('thunkify');
+var http = require('http');
 var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
 
 template.config('extname', '.tmpl');
 
-// 之前使用vm渲染时，在contrllor端给model对象添加了“pageName”属性，
-// 标识每个页面，用于定制化公共头
+/**
+ * @request /
+ * @description 首页心跳检查
+ */
+router.get('/',function* (){
+  log.info('Nginx心跳检查');
+  // TODO: 待后端实现接口
+  /*
+   var code = yield new Promise(function(resolve,reject){
+   http.get({
+   host: '0.0.0.0',
+   port: 8080,
+   path: '/status'
+   }, function(res) {
+   resolve(res.statusCode);
+   }).on('error', function(err) {
+   log.error('MidProxy与Tomcat心跳检查失败\n' + err.stack);
+   resolve(404);
+   });
+   });
+   this.status = code;*/
+  this.body = 'hello world';
+});
+
+
+/**
+ * @request /m
+ * @description 首页渲染。
+ * 之前使用vm渲染时，在contrllor端给model对象添加了“pageName”属性，
+ * 标识每个页面，用于定制化公共头
+ */
 router.get('/m',function* (next){
   console.time('router/m/');
-  var ctx = this;
   var proxy = MidProxy.create( 'Mobile.*' );
+  var app = this.app,
+    self = this;
+
   // 目前的实现中，服务端会添加隐藏表单域_synToken
   proxy
     .getInfo({name: 'uangdksdkjk',test: true,bar: 'too'})
-//    .getWechatInfo()
     .withCookie(this.request.header['cookie']);
 
   console.time('Block Req');
@@ -38,21 +75,23 @@ router.get('/m',function* (next){
 
   var renderObj,html;
   renderObj = {
-    commonEnv: this.EnvConfig['common_dev']
+    commonEnv: app.EnvConfig['common_dev']
   };
 
   if(ret instanceof Error){
-    html = this._cache._commonError50xRender(renderObj);
+    app.error50x.call(this,ret);
+    yield* next;
+    return;
   }else{
     renderObj = {
       homePage: ret[0].data,
-    //  wxJsSdkConfig: ret[1].data,
+      title: ret[0].data.pageBO.title,
       pageName: 'homepage',
-      commonEnv: this.EnvConfig['common_' + this.env],
-      channelEnv: this.EnvConfig['channel_' + this.env],
+      commonEnv: app.EnvConfig['common_' + app.env],
+      channelEnv: app.EnvConfig['channel_' + app.env],
       itemId: null,
       useWXSDK: true,
-      isApp: this.isApp,
+      isApp: this.ua.isApp,
       login: ret[0].login,
       switchToNew: true, //WAP2.0一期开关
       service: this.request.hostname,
@@ -63,23 +102,22 @@ router.get('/m',function* (next){
     };
 
     try {
-      html = this._cache._commonBasicHeadRender(renderObj) + this._cache._commonHeaderRender(renderObj)
-        + this._cache._channelHomePageRender(renderObj)
-        + this._cache._commonFooterRender(renderObj) + this._cache._channelFootRender(renderObj);
-      log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] template render with commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
+      html = app._cache._commonBasicHeadRender(renderObj) + app._cache._commonHeaderRender(renderObj)
+        + app._cache._channelHomePageRender(renderObj)
+        + app._cache._commonFooterRender(renderObj) + app._cache._channelFootRender(renderObj);
+      log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] template render successfully');
     }catch(e){
-      log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error when use some templates among commonBasicHead,commonHeader,channelHomePage,commonFooter and channelFoot');
-      renderObj = {
-        commonEnv: this.EnvConfig['common_dev']
-      };
-
-      html = this._cache._commonError50xRender(renderObj);
-      log.error('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error, ' + e.message);
+      app.error50x.call(self,e);
+      yield* next;
+      return;
     }
 
   }
 
   this.type = 'html';
+
+  // 设置set-cookie
+  app.setCookie(ret,self);
 
   // 方法一，实现Readable的子类View
   var stream = new View();
@@ -97,34 +135,82 @@ router.get('/m',function* (next){
   //});
 
   //this.body = s;
-
 });
 
+
+/**
+ * @request /getWechatConfig
+ * @description 获取微信配置，采用BigPipe渲染
+ */
 router.get('/getWechatConfig',function* (){
-  console.time('router/getWechatConfig/');
   var ctx = this;
   var proxy = MidProxy.create( 'Mobile.*' );
   var ret;
   // BigPipe形式出发wechat配置
-  console.time('asyncWechatConfig')
+  console.time('asyncWechatConfig');
+
   proxy
     .getWechatInfo();
 
   ret = yield new Promise(function(resolve,reject){
     proxy._done(resolve,reject);
   });
-  console.timeEnd('asyncWechatConfig')
-  this.set({
-    'cache-control': 'no-cache',
-    'content-type': 'application/javascript'
-  });
-  this.body = 'd.do("wechatConfig-ready",'+ JSON.stringify(ret[0].data) +')';
-  console.timeEnd('router/getWechatConfig/');
+  console.timeEnd('asyncWechatConfig');
+
+  // 微信配置接口异步请求错误，则触发“wechatConfig-error”事件，弹窗提醒
+  if(ret instanceof Error){
+    //  html = this._cache._commonError50xRender(renderObj);
+    this.set({
+      'cache-control': 'no-cache',
+      'content-type': 'application/javascript'
+    });
+    this.body = 'd.do("wechatConfig-error",'+ JSON.stringify(ret) +')';
+    return;
+  }else{
+    this.set({
+      'cache-control': 'no-cache',
+      'content-type': 'application/javascript'
+    });
+    this.body = 'd.do("wechatConfig-ready",'+ JSON.stringify(ret[0].data) +')';
+  }
+
 });
 
-router.get('/',function* (){
-  log.info('Nginx心跳检查');
-  this.body = 'hello world';
+
+/**
+ * @request /ticket_login
+ * @description 打通OAuth2认证环节，针对302过来的"/ticket_login"请求，
+ * MidProxy仅进行转发，并在接收响应后设置“set-cookie”并
+ * 实现302跳转
+ */
+router.get('/ticket_login',function* (next){
+  var proxy = MidProxy.create( 'OAuth.*')
+    ,ret
+    ,self = this,
+    app = this.app;
+
+  proxy
+    .send(this.querystring)
+    .withCookie(this.request.header['cookie']);
+
+  ret = yield new Promise(function(resolve,reject){
+    proxy._done(resolve,reject);
+  });
+
+  // 响应头
+  this.type = 'html';
+
+  // 设置set-cookie
+  app.setCookie(ret,self);
+
+  // 跳转
+  app.redirect(ret.pop(),self);
+
+  this.body = ret[0];
 });
+
+
+// 添加“达人店”接口
+require('./shop').bind(router);
 
 module.exports = router;

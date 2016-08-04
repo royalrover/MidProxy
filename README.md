@@ -57,3 +57,5 @@ node bin/monitor.js
   |      |      |       | -- static.tmpl
   | -- app.js
   ```
+
+  ## 插件机制

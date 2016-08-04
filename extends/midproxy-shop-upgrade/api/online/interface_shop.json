@@ -4,6 +4,7 @@
     "engine": "mockjs",
     "rulebase": "./rules/",
     "status": "online",
+    "hotload": 1,
     "interfaces": [ {
         "name": "获取达人店店铺是否升级",
         "id": "Shop.getConditions",

@@ -37,6 +37,7 @@
     "thunkify": "^2.1.2"
   },
   "devDependencies": {
+    "heapdump": "^0.3.7",
     "jscoverage": "^0.6.0",
     "mocha": "^2.5.3"
   }

@@ -1,0 +1,6 @@
+{
+  "type": "MidProxy",
+  "name": "midproxy-shop-upgrade",
+  "info": "店铺升级",
+  "views": ["update"]
+}

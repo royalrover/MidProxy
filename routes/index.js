@@ -7,12 +7,14 @@
 var MidProxy = require('../lib/proxy/midproxy');
 var router = require('koa-router')();
 var path = require('path');
+var fs = require('fs');
+var _ = require('lodash');
 var template = require('art-template');
 var thunkify = require('thunkify');
 var http = require('http');
 var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
-
+var emitter = require(path.join(process.cwd(),'lib/hotload/watchExtends')).emitter;
 template.config('extname', '.tmpl');
 
 /**
@@ -38,7 +40,6 @@ router.get('/',function* (){
    this.status = code;*/
   this.body = 'hello world';
 });
-
 
 /**
  * @request /m
@@ -211,6 +212,66 @@ router.get('/ticket_login',function* (next){
 
 
 // 添加“达人店”接口
-require('./shop').bind(router);
+//require('./shop').bind(router);
+
+// 加载外挂包
+var base = path.join(process.cwd(),'extends/');
+var projs = fs.readdirSync(base);
+var checkDirsExceptDSStore = function(dirs){
+  var nameReg = /^[a-z0-9]/i;
+  var ret = [];
+  dirs.forEach(function(v,i){
+    if(v.match(nameReg)){
+      ret.push(v);
+    }
+  });
+  return ret;
+};
+
+projs = checkDirsExceptDSStore(projs);
+
+var Extends = {
+  MidProxy: MidProxy,
+  View: View,
+  log: log,
+  lodash: _
+};
+
+var Extends = Object.create(router);
+Extends.MidProxy =  MidProxy;
+Extends.View =  View;
+Extends.log = log;
+Extends.lodash = _;
+
+var load = function(projs,trigger){
+  projs.forEach(function(proj){
+    var loc = path.join(base,proj,'routes');
+    var file = path.join(loc,'page');
+    var api = path.join(loc,'api');
+    var m;
+
+    if(fs.existsSync(loc)){
+      if(fs.existsSync(file) && fs.existsSync(path.join(file,'index.js'))){
+        m = require(file);
+        m && m.bind && m.bind(Extends);
+      }
+
+      if(fs.existsSync(api) && fs.existsSync(path.join(api,'index.js'))){
+        m = require(api);
+        m && m.bind && m.bind(Extends);
+      }
+    }
+  });
+};
+
+load(projs);
+
+// 防止内存泄漏
+emitter.removeAllListeners('extendsAdd');
+emitter.on('extendsAdd',function(data){
+  console.log('extendsAdd...')
+  projs = data.projs;
+  load(projs,'trigger');
+});
 
 module.exports = router;

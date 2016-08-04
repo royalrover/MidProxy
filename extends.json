@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "midproxy-shop-upgrade": {
+      "url": "git@git.showjoy.net:midproxy/midproxy-shop-upgrade.git",
+      "labels": "店铺升级",
+      "branch": "master"
+    }
+  }
+}

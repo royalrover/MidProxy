@@ -1,18 +1,37 @@
 'use strict';
 
 var path = require('path');
-var _ = require('lodash');
-var MidProxy = require('../../../lib/proxy/midproxy');
-var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
-var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
+var fs = require('fs');
 
-exports.bind = function(router){
+// 过滤隐藏文件
+var checkDirsExceptDSStore = function(dirs){
+  var nameReg = /^[a-z0-9]/i;
+  var ret = [];
+  dirs.forEach(function(v,i){
+    if(v.match(nameReg)){
+      ret.push(v);
+    }
+  });
+  return ret;
+};
+
+var controllers = fs.readdirSync(__dirname);
+controllers = checkDirsExceptDSStore(controllers);
+// 删除controllers数组中的“index.js”项
+controllers.splice(controllers.indexOf('index.js'),1);
+
+exports.bind = function(Extends/*router,MidProxy,View,log,_*/){
+  var MidProxy = Extends.MidProxy;
+  var View = Extends.View;
+  var log = Extends.log;
+  var _ = Extends.lodash;
   /**
    * @request /shop/upgrade
    * @description 达人店铺升级页
    */
-  router.get('/shop/upgrade', function* (next){
+  Extends.get('/shop/upgrade', function* (next){
     console.time('shop/upgrade');
+
     var proxy = MidProxy.create('Shop.*'),
       ret,
       html,
@@ -87,4 +106,11 @@ exports.bind = function(router){
     this.body = stream;
     console.timeEnd('shop/upgrade');
   });
+
+  // 加载其他控制器
+  controllers.forEach(function(ctl){
+    require(path.join(__dirname,ctl)).bind(router,MidProxy,View,log,_);
+  });
 };
+
+module.hotload = 1;

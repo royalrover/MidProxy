@@ -3,6 +3,7 @@
     "keywords": "",
     "catId|100000-999999": 1
   },
+  "hotload": 1,
   "response": {
     "count|0-1": 0,
     "data": {

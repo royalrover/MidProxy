@@ -13,6 +13,10 @@
         "encoding": "utf8",
         "isCookieNeeded": false,
         "isRuleStatic": false,
+        "urls": {
+            "online": "http://shop.m.showjoy.net/api/shop/getConditions"
+        },
+        "status": "online",
         "ruleFile": "Shop.getConditions.rule.json"
     },{
         "name": "店铺升级",

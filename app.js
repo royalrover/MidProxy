@@ -241,7 +241,7 @@ ref.refresh({
 var dump = function(){
   var d = new Date();
   var name = d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate() + '_' + process.pid;
-  heapdump.writeSnapshot('/Users/showjoy/' + name + '.heapsnapshot',function(err, filename){
+  heapdump.writeSnapshot('/tmp/heapwatcher/' + name + '.heapsnapshot',function(err, filename){
     console.log('dump written to', filename);
   });
 };

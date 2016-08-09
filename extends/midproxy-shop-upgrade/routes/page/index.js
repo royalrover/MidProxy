@@ -53,22 +53,23 @@ exports.bind = function(Extends/*router,MidProxy,View,log,_*/){
       return;
     }
 
-    var globalConfig = ret[0].data;
-    var dataJson = ret[1].data;
-
-    var childrenLimit = dataJson.childrenLimit;
-    var ordersLimit = dataJson.ordersLimit;
-    var openedDaysLimit = dataJson.openedDaysLimit;
-
-    dataJson.childrenLeft = parseInt(childrenLimit) - parseInt(dataJson.children);
-    dataJson.ordersLeft = parseInt(ordersLimit) - parseInt(dataJson.orders);
-    dataJson.openedDaysLeft = parseInt(openedDaysLimit) - parseInt(dataJson.openedDays);
-
-    dataJson.childrenRate = parseInt(dataJson.children) / parseInt(childrenLimit) * 100 + '%';
-    dataJson.ordersRate = parseInt(dataJson.orders) / parseInt(ordersLimit) * 100 + '%';
-    dataJson.openedDaysRate = parseInt(dataJson.openedDays) / parseInt(openedDaysLimit) * 100 + '%';
-
     try {
+      var globalConfig = ret[0].data;
+      var dataJson = ret[1].data;
+
+      var childrenLimit = dataJson.childrenLimit;
+      var ordersLimit = dataJson.ordersLimit;
+      var openedDaysLimit = dataJson.openedDaysLimit;
+
+      dataJson.childrenLeft = parseInt(childrenLimit) - parseInt(dataJson.children);
+      dataJson.ordersLeft = parseInt(ordersLimit) - parseInt(dataJson.orders);
+      dataJson.openedDaysLeft = parseInt(openedDaysLimit) - parseInt(dataJson.openedDays);
+
+      dataJson.childrenRate = parseInt(dataJson.children) / parseInt(childrenLimit) * 100 + '%';
+      dataJson.ordersRate = parseInt(dataJson.orders) / parseInt(ordersLimit) * 100 + '%';
+      dataJson.openedDaysRate = parseInt(dataJson.openedDays) / parseInt(openedDaysLimit) * 100 + '%';
+
+
       var renderObj = {
         title: '店铺升级页',
         pageName: 'shop-upgrade-home',

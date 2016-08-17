@@ -6,7 +6,7 @@ exports.bind = function(Extends){
   var log = Extends.log;
   var _ = Extends.lodash;
 
-  Extends.get('/api/shop/itemDetail', function* (){
+  Extends.get('/api/shop/itemDetail/cat', function* (){
     var proxy = MidProxy.create('Shop.*'),ret;
     proxy
       .getItemInfo()
@@ -16,7 +16,8 @@ exports.bind = function(Extends){
       proxy._done(resolve,reject);
     });
 
-    console.dir(ret);
+    var tag = 'tst';
+    //console.dir(ret);
 
     if(ret instanceof Error){
       this.body = ret.stack;

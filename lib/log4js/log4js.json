@@ -6,11 +6,46 @@
     "alwaysIncludePattern": true
   },
   "appenders": [
-    {"type": "console"},
-    {"pattern": "/yyyyMMddhh.txt", "category": "logInfo","filename": "info"},
-    {"pattern": "/yyyyMMddhh.txt", "category": "logWarn","filename": "warn"},
-    {"pattern": "/yyyyMMddhh.txt", "category": "trace","filename": "trace"}
+    {
+      "pattern": "/yyyy-MM-dd.txt",
+      "category": "logInfo",
+      "filename": "info",
+      "type": "console",
+      "layout": {
+        "type": "pattern",
+        "pattern": "%r [%x{name}] %p - %m%n",
+        "tokens": {
+          "name": "MidProxy"
+        }
+      }
+    },
+    {
+      "pattern": "/yyyy-MM-dd.txt",
+      "category": "logErr",
+      "filename": "err",
+      "type": "console",
+      "layout": {
+        "type": "pattern",
+        "pattern": "%[%r [%x{name}] %p -%] %m%n",
+        "tokens": {
+          "name": "MidProxy"
+        }
+      }
+    },
+    {
+      "pattern": "/yyyy-MM-dd.txt",
+      "category": "trace",
+      "filename": "trace",
+      "type": "console",
+      "layout": {
+        "type": "pattern",
+        "pattern": "%[%r [%x{name}] %p -%] %m%n",
+        "tokens": {
+          "name": "MidProxy"
+        }
+      }
+    }
   ],
   "replaceConsole": true,
-  "levels":{ "logDebug": "DEBUG", "logInfo": "DEBUG", "logWarn": "DEBUG", "logErr": "DEBUG"}
+  "levels":{ "trace": "TRACE", "logInfo": "INFO", "logErr": "ERROR"}
 }

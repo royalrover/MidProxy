@@ -8,11 +8,12 @@ var MidProxy = require('../lib/proxy/midproxy');
 var router = require('koa-router')();
 var path = require('path');
 var fs = require('fs');
+var vm = require('vm');
+var async = require('async');
 var _ = require('lodash');
 var template = require('art-template');
 var thunkify = require('thunkify');
 var http = require('http');
-var log = require(path.join(process.cwd(),'/lib/log4js/logger'));
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
 var emitter = require(path.join(process.cwd(),'lib/hotload/watchExtends')).emitter;
 template.config('extname', '.tmpl');
@@ -48,7 +49,7 @@ router.get('/',function* (){
  * 标识每个页面，用于定制化公共头
  */
 router.get('/m',function* (next){
-  console.time('router/m/');
+//  console.time('router/m/');
   var proxy = MidProxy.create( 'Mobile.*' );
   var app = this.app,
     self = this;
@@ -58,7 +59,7 @@ router.get('/m',function* (next){
     .getInfo({name: 'uangdksdkjk',test: true,bar: 'too'})
     .withCookie(this.request.header['cookie']);
 
-  console.time('Block Req');
+//  console.time('Block Req');
   // ret format:
   // [data1,data2,data3 ... [cookie]]
 
@@ -72,9 +73,9 @@ router.get('/m',function* (next){
     proxy._done(resolve,reject);
   });
 
-  console.timeEnd('Block Req');
+//  console.timeEnd('Block Req');
 
-  var renderObj,html;
+  var renderObj,html = '';
   renderObj = {
     commonEnv: app.EnvConfig['common_dev']
   };
@@ -103,10 +104,106 @@ router.get('/m',function* (next){
     };
 
     try {
-      html = app._cache._commonBasicHeadRender(renderObj) + app._cache._commonHeaderRender(renderObj)
+      /*html = app._cache._commonBasicHeadRender(renderObj) + app._cache._commonHeaderRender(renderObj)
         + app._cache._channelHomePageRender(renderObj)
-        + app._cache._commonFooterRender(renderObj) + app._cache._channelFootRender(renderObj);
-      log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] template render successfully');
+        + app._cache._commonFooterRender(renderObj) + app._cache._channelFootRender(renderObj);*/
+
+      var segs = yield new Promise(function(res,rej){
+        async.parallel([
+          function(cb){
+            redisUtil.getRedis('f2e_commonBasicHeadRender').then(function(reply){
+              vm.runInThisContext('var fn = ' + reply, {filename: 'routes/index'});
+              var ret;
+              try{
+                ret = fn.call(template.utils,renderObj);
+                fn = null;
+              }catch(e){
+                cb(e);
+              }
+
+              cb(null,ret);
+            },function(err){
+              cb(err);
+            });
+          },
+          function(cb){
+            redisUtil.getRedis('f2e_commonHeaderRender').then(function(reply){
+              vm.runInThisContext('var fn = ' + reply, {filename: 'routes/index'});
+              var ret;
+              try{
+                ret = fn.call(template.utils,renderObj);
+                fn = null;
+              }catch(e){
+                cb(e);
+              }
+              cb(null,ret);
+            },function(err){
+              cb(err);
+            });
+          },
+          function(cb){
+            redisUtil.getRedis('f2e_channelHomePageRender').then(function(reply){
+              vm.runInThisContext('var fn = ' + reply, {filename: 'routes/index'});
+              var ret;
+              try{
+                ret = fn.call(template.utils,renderObj);
+                fn = null;
+              }catch(e){
+                cb(e);
+              }
+              cb(null,ret);
+            },function(err){
+              cb(err);
+            });
+          },
+          function(cb){
+            redisUtil.getRedis('f2e_commonFooterRender').then(function(reply){
+              vm.runInThisContext('var fn = ' + reply, {filename: 'routes/index'});
+              var ret;
+              try{
+                ret = fn.call(template.utils,renderObj);
+                fn = null;
+              }catch(e){
+                cb(e);
+              }
+              cb(null,ret);
+            },function(err){
+              cb(err);
+            });
+          },
+          function(cb){
+            redisUtil.getRedis('f2e_channelFootRender').then(function(reply){
+              vm.runInThisContext('var fn = ' + reply, {filename: 'routes/index'});
+              var ret;
+              try{
+                ret = fn.call(template.utils,renderObj);
+                fn = null;
+              }catch(e){
+                cb(e);
+              }
+              cb(null,ret);
+            },function(err){
+              cb(err);
+            });
+          }
+        ],function(err,rets){
+          if(err){
+            rej([err]);
+          }
+
+          rets.forEach(function(seg){
+            html += seg.toString();
+          });
+
+          // 返回数据
+          res([null,html]);
+        //  log.info('request[id=' + self.id + ',path='+ self.path + self.search + '] template render successfully');
+        });
+      });
+
+      if(segs[0]){
+        throw segs[0];
+      }
     }catch(e){
       app.error50x.call(self,e);
       yield* next;
@@ -124,7 +221,7 @@ router.get('/m',function* (next){
   var stream = new View();
   stream.end(html);
   this.body = stream;
-  console.timeEnd('router/m/');
+//  console.timeEnd('router/m/');
   // 方法二，使用Stream类
   //var through = require('through');
   //var s = through();
@@ -144,11 +241,10 @@ router.get('/m',function* (next){
  * @description 获取微信配置，采用BigPipe渲染
  */
 router.get('/getWechatConfig',function* (){
-  var ctx = this;
   var proxy = MidProxy.create( 'Mobile.*' );
   var ret;
   // BigPipe形式出发wechat配置
-  console.time('asyncWechatConfig');
+  //  console.time('asyncWechatConfig');
 
   proxy
     .getWechatInfo();
@@ -156,7 +252,7 @@ router.get('/getWechatConfig',function* (){
   ret = yield new Promise(function(resolve,reject){
     proxy._done(resolve,reject);
   });
-  console.timeEnd('asyncWechatConfig');
+  //  console.timeEnd('asyncWechatConfig');
 
   // 微信配置接口异步请求错误，则触发“wechatConfig-error”事件，弹窗提醒
   if(ret instanceof Error){
@@ -211,31 +307,10 @@ router.get('/ticket_login',function* (next){
 });
 
 
-// 添加“达人店”接口
-//require('./shop').bind(router);
-
 // 加载外挂包
 var base = path.join(process.cwd(),'extends/');
 var projs = fs.readdirSync(base);
-var checkDirsExceptDSStore = function(dirs){
-  var nameReg = /^[a-z0-9]/i;
-  var ret = [];
-  dirs.forEach(function(v,i){
-    if(v.match(nameReg)){
-      ret.push(v);
-    }
-  });
-  return ret;
-};
-
 projs = checkDirsExceptDSStore(projs);
-
-var Extends = {
-  MidProxy: MidProxy,
-  View: View,
-  log: log,
-  lodash: _
-};
 
 var Extends = Object.create(router);
 Extends.MidProxy =  MidProxy;
@@ -266,12 +341,15 @@ var load = function(projs,trigger){
 
 load(projs);
 
-// 防止内存泄漏
-emitter.removeAllListeners('extendsAdd');
-emitter.on('extendsAdd',function(data){
-  console.log('extendsAdd...')
-  projs = data.projs;
-  load(projs,'trigger');
-});
+if(runEnv == 'dev'){
+  // 防止内存泄漏
+  emitter.removeAllListeners('extendsAdd');
+  emitter.on('extendsAdd',function(data){
+    log.info('extendsAdd >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>');
+    projs = data.projs;
+    load(projs,'trigger');
+  });
+}
+
 
 module.exports = router;

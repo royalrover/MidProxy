@@ -8,7 +8,7 @@
         "name": "获取mobile主页信息",
         "id": "Mobile.getInfo",
         "urls": {
-            "online": "http://localhost:8080/m/api/home/getInfo"
+            "online": "http://localhost:8080/api/m/home/getInfo"
         },
         "method": "get",
         "dataType": "json",

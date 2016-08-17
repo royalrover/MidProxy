@@ -37,7 +37,7 @@ node bin/monitor.js
   | -- midwares
   | -- public
   | -- [routes]
-  |      | -- index.js 主逻辑入口
+  |      | -- cacheLRU.js 主逻辑入口
   | -- [rules]
   |      | -- [channel]
   |      |      | -- Mobile.getInfo.rule.json

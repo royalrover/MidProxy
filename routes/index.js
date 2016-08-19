@@ -188,7 +188,7 @@ router.get('/m',function* (next){
           }
         ],function(err,rets){
           if(err){
-            rej([err]);
+            res([err]);
           }
 
           rets.forEach(function(seg){

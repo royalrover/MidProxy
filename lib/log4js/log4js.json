@@ -8,6 +8,7 @@
   "appenders": [
     {
       "pattern": "/yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
       "category": "logInfo",
       "filename": "info",
       "type": "console",
@@ -21,6 +22,7 @@
     },
     {
       "pattern": "/yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
       "category": "logErr",
       "filename": "err",
       "type": "console",
@@ -34,6 +36,7 @@
     },
     {
       "pattern": "/yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
       "category": "trace",
       "filename": "trace",
       "type": "console",

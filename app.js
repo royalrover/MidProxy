@@ -3,6 +3,7 @@
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
+var vm = require('vm');
 var koa = require('koa');
 var staticm = require('koa-static');
 var koaBody = require('koa-body');
@@ -11,8 +12,9 @@ var reqId = require('koa-request-id');
 var gzip = require('koa-gzip');
 var graceful = require('graceful');
 var template = require('art-template');
-var co = require('co');
 var heapdump = require('heapdump');
+var async = require('async');
+var _ = require('lodash');
 
 // 当前运行环境
 var env = process.argv[2];
@@ -34,6 +36,161 @@ global.checkDirsExceptDSStore = function(dirs){
   });
   return ret;
 };
+
+global.setCache = function(kv){
+  _.forEach(kv,function(v,k){
+    redisUtil.setRedis(k,v);
+  });
+};
+
+global.resolveOtherControllers = function resolveOtherControllers(Extends,dirname){
+  var controllers = fs.readdirSync(dirname);
+  // 过滤隐藏文件
+  controllers = checkDirsExceptDSStore(controllers);
+  // 删除controllers数组中的“index.js”项
+  controllers.splice(controllers.indexOf('index.js'),1);
+
+  // 加载其他控制器
+  // page目录创建多个controller完成复杂业务的开发和定制
+  controllers.forEach(function(ctl){
+    require(path.join(dirname,ctl)).bind(Extends);
+  });
+};
+
+global.out =
+  function out(setting){
+    try{
+      var _ = setting.Extends.lodash;
+      var createProxies = setting.createProxies;
+      var handleRenderData = setting.handleRenderData;
+      var keys = setting.keys;
+      var View = setting.Extends.View;
+      var isSetCookie = setting.isSetCookie || false;
+    }catch(e){
+      log.error('global.out exec encounter an error. The setting object sames to be wrong.')
+      return function* (next){
+        this.app.error50x.call(this,new TypeError('the result of function createProxies is wrong'));
+        yield* next;
+        return;
+      }
+    }
+
+    return function* (next){
+      try {
+        var app = this.app;
+        var ret;
+        var proxy = createProxies.call(this);
+        var self = this;
+        var isMultiCrossReq = false;
+
+        if(_.isArray(proxy)){
+          isMultiCrossReq = true;
+          ret = yield proxy.map(function(p){
+            return new Promise(function(resolve,reject){
+              try{
+                p._done(resolve,reject);
+              }catch(e){
+                resolve(e);
+              }
+            });
+          });
+
+          // 如果请求出错，则返回结果ret为Error类型，渲染错误页面
+          var _flag = false,errorRet;
+          ret.forEach(function(r){
+            if(r instanceof Error){
+              _flag = true;
+              errorRet = r;
+            }
+          });
+          if(_flag){
+            app.error50x.call(this,errorRet);
+            yield* next;
+            return;
+          }
+
+        }else if(proxy instanceof MidProxy){
+          ret = yield new Promise(function(resolve,reject){
+            proxy._done(resolve,reject);
+          });
+
+          // 如果请求出错，则返回结果ret为Error类型，渲染错误页面
+          if(ret instanceof Error){
+            app.error50x.call(this,ret);
+            yield* next;
+            return;
+          }
+        }else{
+          app.error50x.call(this,new TypeError('the result of function createProxies is wrong'));
+          yield* next;
+          return;
+        }
+
+        var renderObj = handleRenderData.call(this,ret,app);
+        var html = '';
+
+        var jobs = keys.map(function(key){
+          return function(cb){
+            redisUtil.getRedis(key).then(function(reply){
+              vm.runInThisContext('var _render = ' + reply, {filename: key});
+              var ret;
+              try{
+                ret = _render.call(template.utils,renderObj);
+              }catch(e){
+                cb(e);
+              }
+
+              cb(null,ret);
+            },function(err){
+              cb(err);
+            });
+          }
+        });
+
+        // 此处发起redis调用，获取需要的模板
+        var segs = yield new Promise(function(res){
+          // 采用async并发请求redis服务
+          async.parallel(jobs, function(err,rets){
+            if(err){
+              res([err]);
+            }
+
+            rets.forEach(function(seg){
+              // seg为对象，需要调用toString函数
+              html += seg.toString();
+            });
+
+            // 返回数据
+            res([null,html]);
+          });
+        });
+
+        // 返回数据有误，则进入50x页面
+        if(segs[0]){
+          throw segs[0];
+        }
+
+      }catch(e){
+        app.error50x.call(self,e);
+        yield* next;
+        return;
+      }
+
+      this.type = 'html';
+
+      // 在需要登录认证的页面，必须设置setCookie header
+      // 设置set-cookie
+      if(isSetCookie){
+        app.setCookie(ret,self,isMultiCrossReq);
+      }
+
+
+      // 使用实现Readable的子类View完成流式读取
+      var stream = new View();
+      stream.end(html);
+      this.body = stream;
+    }
+  };
 
 var router = require('./routes/index');
 var MidProxy = require('./lib/proxy/midproxy');
@@ -169,10 +326,18 @@ app.error50x = function(error){
 };
 
 // 设置set-cookie操作，在所有返回页面试图前都需调用
-app.setCookie = function(ret,ctx){
-  ret.pop().forEach(function(setCookie){
-    ctx.set('Set-Cookie',setCookie);
-  });
+app.setCookie = function(ret,ctx,isMultiCrossReq){
+  if(isMultiCrossReq){
+    ret.forEach(function(result){
+      result.pop().forEach(function(setCookie){
+        ctx.set('Set-Cookie',setCookie);
+      });
+    });
+  }else{
+    ret.pop().forEach(function(setCookie){
+      ctx.set('Set-Cookie',setCookie);
+    });
+  }
 };
 
 // 针对OAuth操作，做重定向

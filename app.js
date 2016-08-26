@@ -219,7 +219,7 @@ projs.forEach(function(proj,i){
   try{
     if(fs.existsSync(loc)){
       var m = require(loc);
-      m && m.preHandle && m.preHandle(redisUtil,template,viewLoc);
+      m && m.preHandle && m.preHandle(template,viewLoc);
     }
   }catch(e){
     throw e;
@@ -248,7 +248,7 @@ if(env == 'dev'){
       try{
         if(fs.existsSync(loc)){
           var m = require(loc);
-          m && m.preHandle && m.preHandle(redisUtil,template,viewLoc);
+          m && m.preHandle && m.preHandle(template,viewLoc);
         }
       }catch(e){
         throw e;

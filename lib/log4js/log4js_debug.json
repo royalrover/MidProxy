@@ -1,39 +1,48 @@
 {
   "customBaseDir" :"/tmp/log4js/",
   "customDefaultAtt" :{
-    "type": "file",
+    "type": "dateFile",
     "absolute": true,
     "alwaysIncludePattern": true
   },
   "appenders": [
     {
+      "pattern": "/yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
       "category": "logInfo",
-      "filename": "info.log",
+      "filename": "info",
+      "type": "console",
       "layout": {
         "type": "pattern",
-        "pattern": "%d %r [%x{name}] %p - %m%n",
+        "pattern": "%r [%x{name}] %p - %m%n",
         "tokens": {
           "name": "MidProxy"
         }
       }
     },
     {
+      "pattern": "/yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
       "category": "logErr",
-      "filename": "error.log",
+      "filename": "err",
+      "type": "console",
       "layout": {
         "type": "pattern",
-        "pattern": "%d %[%r [%x{name}] %p -%] %m%n",
+        "pattern": "%[%r [%x{name}] %p -%] %m%n",
         "tokens": {
           "name": "MidProxy"
         }
       }
     },
     {
+      "pattern": "/yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
       "category": "trace",
-      "filename": "trace.log",
+      "filename": "trace",
+      "type": "console",
       "layout": {
         "type": "pattern",
-        "pattern": "%d %[%r [%x{name}] %p -%] %m%n",
+        "pattern": "%[%r [%x{name}] %p -%] %m%n",
         "tokens": {
           "name": "MidProxy"
         }

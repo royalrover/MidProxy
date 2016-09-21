@@ -242,6 +242,7 @@ if(env == 'dev'){
   watcher.emitter.on('templateChange',function(e){
     // 无论e.type为 ADD、Update还是Delete，都重新编译所有模板
     var projs = e.projs;
+    log.trace('reload preHandle >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>  list of projs:' + projs.join(','));
     projs.forEach(function(proj,i){
       var loc = path.join(base,proj,'pre');
       var viewLoc = path.join(base,proj,'views/mobile');
@@ -441,7 +442,7 @@ if(env == 'dev'){
     clear.clearFileCache(require.resolve('./routes/index'));
     router = require('./routes/index');
 
-    log.trace(router.stack[router.stack.length-1]['stack'][0].toString())
+    //  log.trace(router.stack[router.stack.length-1]['stack'][0].toString())
     // 更新控制器函数
     fn = router.routes();
   });

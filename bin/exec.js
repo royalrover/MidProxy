@@ -9,7 +9,8 @@ var logger = require('../lib/log4js/logger');
 
 var pids = [];
 var count = 0;
-cfork({
+
+var cluster = cfork({
   exec: path.join(__dirname, '../app.js'),
   duration: 60000,
   args: [process.argv[3],process.argv[4]] // midProxy运行环境  cmd: node bin/exec.js -e dev online(mock)

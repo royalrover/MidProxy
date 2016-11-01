@@ -104,9 +104,6 @@ router.get('/m',function* (next){
     };
 
     try {
-      /*html = app._cache._commonBasicHeadRender(renderObj) + app._cache._commonHeaderRender(renderObj)
-        + app._cache._channelHomePageRender(renderObj)
-        + app._cache._commonFooterRender(renderObj) + app._cache._channelFootRender(renderObj);*/
 
       var segs = yield new Promise(function(res,rej){
         async.parallel([
@@ -197,7 +194,6 @@ router.get('/m',function* (next){
 
           // 返回数据
           res([null,html]);
-        //  log.info('request[id=' + self.id + ',path='+ self.path + self.search + '] template render successfully');
         });
       });
 
@@ -247,7 +243,8 @@ router.get('/getWechatConfig',function* (){
   //  console.time('asyncWechatConfig');
 
   proxy
-    .getWechatInfo();
+    .getWechatInfo()
+    .withCookie(this.request.header['cookie']);
 
   ret = yield new Promise(function(resolve,reject){
     proxy._done(resolve,reject);
@@ -318,7 +315,22 @@ Extends.View =  View;
 Extends.log = log;
 Extends.lodash = _;
 
-var load = function(projs,trigger){
+// 默认只提供两种请求，即get和post
+Extends.use = function(urlPattern,ops){
+  if(!ops || typeof ops !== 'object'){
+    log.error('params must be an Object!');
+    return;
+  }
+  var isGet = ops.method ? ops.method.toLowerCase() == 'get' ? true : false : true;
+  ops.Extends = Extends;
+  if(isGet){
+    Extends.get(urlPattern,out(ops));
+  }else{
+    Extends.post(urlPattern,out(ops));
+  }
+};
+
+var load = function(projs){
   projs.forEach(function(proj){
     var loc = path.join(base,proj,'routes');
     var file = path.join(loc,'page');
@@ -330,26 +342,19 @@ var load = function(projs,trigger){
         m = require(file);
         m && m.bind && m.bind(Extends);
       }
+      // 加载page下的其他路由模块
+      resolveOtherControllers(Extends,file);
 
       if(fs.existsSync(api) && fs.existsSync(path.join(api,'index.js'))){
         m = require(api);
         m && m.bind && m.bind(Extends);
       }
+      // 加载api下的其他路由模块
+      resolveOtherControllers(Extends,api);
     }
   });
 };
 
 load(projs);
-
-if(runEnv == 'dev'){
-  // 防止内存泄漏
-  emitter.removeAllListeners('extendsAdd');
-  emitter.on('extendsAdd',function(data){
-    log.info('extendsAdd >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>');
-    projs = data.projs;
-    load(projs,'trigger');
-  });
-}
-
 
 module.exports = router;

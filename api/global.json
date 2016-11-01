@@ -1,0 +1,53 @@
+{
+  "title": "MidProxy接口配置",
+  "version": "0.0.1",
+  "engine": "mockjs",
+  "rulebase": "./rules/",
+  "status": "online",
+  "hotload": 1,
+  "interfaces": [
+    {
+      "name": "获取达人店全局信息",
+      "id": "Shop.getConfig",
+      "method": "get",
+      "urls": {
+        "dev": "http://shop.m.showjoy.net/api/getConfig",
+        "online": "http://localhost:54101/api/getConfig",
+        "preview": "http://localhost:54601/api/getConfig",
+        "test": "http://localhost:15381/api/getConfig"
+      },
+      "dataType": "json",
+      "encoding": "utf8",
+      "isCookieNeeded": true,
+      "isRuleStatic": false
+    },
+    {
+      "name": "获取mobile主页的wechat配置信息",
+      "id": "Mobile.getWechatInfo",
+      "urls": {
+        "dev": "http://192.168.0.61:8080/api/m/home/getWechatInfo",
+        "online": "http://192.168.0.61:8080/api/m/home/getWechatInfo",
+        "preview": "http://192.168.0.61:8080/api/m/home/getWechatInfo",
+        "test": "http://192.168.0.61:8080/api/m/home/getWechatInfo"
+      },
+      "method": "get",
+      "dataType": "json",
+      "encoding": "utf8",
+      "isCookieNeeded": true,
+      "isRuleStatic": false
+    },{
+      "name": "转发认证请求",
+      "id": "OAuth.send",
+      "method": "get",
+      "urls": {
+        "dev": "http://www.showjoy.net/ticket_login",
+        "online": "http://localhost:8080/ticket_login",
+        "preview": "http://localhost:8080/ticket_login",
+        "test": "http://www.showjoy.net/ticket_login"
+      },
+      "dataType": "raw",
+      "encoding": "utf8",
+      "isCookieNeeded": true,
+      "isRuleStatic": false
+    }]
+}

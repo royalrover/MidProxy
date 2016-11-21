@@ -119,7 +119,12 @@ projs.forEach(function(proj,i){
         }
       }else{
         // 非模板文件，则直接缓存序列化的内容
-        redisUtil.setRedis(item['k'],item['v'].toString ? item.toString() : JSON.stringify(item['v']));
+        try{
+          redisUtil.setRedis(item['k'],JSON.stringify(item['v']));
+        }catch(e){
+          redisUtil.setRedis(item['k'],item['v'].toString());
+        }
+
       }
 
     });

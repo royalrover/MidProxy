@@ -7,34 +7,46 @@
   "hotload": 1,
   "interfaces": [
     {
+      "name": "后端服务器健康检查",
+      "id": "Server.checkHeartbeat",
+      "method": "get",
+      "urls": {
+        "dev": "http://shopappserver.showjoy.net/",
+        "online": "http://localhost:54101/",
+        "preview": "http://localhost:54601/",
+        "test": "http://localhost:15381/"
+      },
+      "dataType": "text",
+      "encoding": "utf8",
+      "isCookieNeeded": true
+    },
+    {
       "name": "获取达人店全局信息",
       "id": "Shop.getConfig",
       "method": "get",
       "urls": {
-        "dev": "http://shop.m.showjoy.net/api/getConfig",
-        "online": "http://localhost:54101/api/getConfig",
-        "preview": "http://localhost:54601/api/getConfig",
-        "test": "http://localhost:15381/api/getConfig"
+        "dev": "http://shopappserver.showjoy.net/m/api/getConfig",
+        "online": "http://localhost:54101/m/api/getConfig",
+        "preview": "http://localhost:54601/m/api/getConfig",
+        "test": "http://localhost:15381/m/api/getConfig"
       },
       "dataType": "json",
       "encoding": "utf8",
-      "isCookieNeeded": true,
-      "isRuleStatic": false
+      "isCookieNeeded": true
     },
     {
       "name": "获取mobile主页的wechat配置信息",
       "id": "Mobile.getWechatInfo",
       "urls": {
-        "dev": "http://192.168.0.61:8080/api/m/home/getWechatInfo",
-        "online": "http://192.168.0.61:8080/api/m/home/getWechatInfo",
-        "preview": "http://192.168.0.61:8080/api/m/home/getWechatInfo",
-        "test": "http://192.168.0.61:8080/api/m/home/getWechatInfo"
+        "dev": "http://shopappserver.showjoy.net/api/home/getWechatInfo",
+        "online": "http://localhost:54101/api/home/getWechatInfo",
+        "preview": "http://localhost:54601/api/home/getWechatInfo",
+        "test": "http://localhost:15381/api/home/getWechatInfo"
       },
       "method": "get",
       "dataType": "json",
       "encoding": "utf8",
-      "isCookieNeeded": true,
-      "isRuleStatic": false
+      "isCookieNeeded": true
     },{
       "name": "转发认证请求",
       "id": "OAuth.send",
@@ -47,7 +59,6 @@
       },
       "dataType": "raw",
       "encoding": "utf8",
-      "isCookieNeeded": true,
-      "isRuleStatic": false
+      "isCookieNeeded": true
     }]
 }

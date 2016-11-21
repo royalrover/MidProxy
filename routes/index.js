@@ -23,23 +23,31 @@ template.config('extname', '.tmpl');
  * @description 首页心跳检查
  */
 router.get('/',function* (){
+  this.status = 200;
+  this.body = 'hello ShowJoy';
+});
+
+/**
+ * @request /status
+ * @description 心跳检查
+ */
+router.get('/status',function* (){
   log.info('Nginx心跳检查');
-  // TODO: 待后端实现接口
-  /*
-   var code = yield new Promise(function(resolve,reject){
-   http.get({
-   host: '0.0.0.0',
-   port: 8080,
-   path: '/status'
-   }, function(res) {
-   resolve(res.statusCode);
-   }).on('error', function(err) {
-   log.error('MidProxy与Tomcat心跳检查失败\n' + err.stack);
-   resolve(404);
-   });
-   });
-   this.status = code;*/
-  this.body = 'hello world';
+  var proxy = MidProxy.create( 'Server.checkHeartbeat' );
+  proxy
+    .checkHeartbeat()
+    .withCookie(this.request.header['cookie']);
+  var ret = yield new Promise(function(resolve,reject){
+    proxy._done(resolve,reject);
+  });
+
+  if(ret[0] == 'success'){
+    this.status = 200;
+    this.body = 'hello world';
+  }else{
+    this.status = 500;
+    this.body = 'error';
+  }
 });
 
 /**
@@ -233,23 +241,22 @@ router.get('/m',function* (next){
 
 
 /**
- * @request /getWechatConfig
+ * @request /shop/getWechatConfig
  * @description 获取微信配置，采用BigPipe渲染
  */
-router.get('/getWechatConfig',function* (){
+router.get('/api/shop/getWechatConfig',function* (){
   var proxy = MidProxy.create( 'Mobile.*' );
   var ret;
   // BigPipe形式出发wechat配置
-  //  console.time('asyncWechatConfig');
-
   proxy
-    .getWechatInfo()
+    .getWechatInfo({
+      url: this.querystring
+    })
     .withCookie(this.request.header['cookie']);
 
   ret = yield new Promise(function(resolve,reject){
     proxy._done(resolve,reject);
   });
-  //  console.timeEnd('asyncWechatConfig');
 
   // 微信配置接口异步请求错误，则触发“wechatConfig-error”事件，弹窗提醒
   if(ret instanceof Error){
@@ -326,7 +333,7 @@ Extends.use = function(urlPattern,ops){
   if(isGet){
     Extends.get(urlPattern,out(ops));
   }else{
-    Extends.post(urlPattern,out(ops));
+    Extends[ops.method.toLowerCase()](urlPattern,out(ops));
   }
 };
 

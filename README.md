@@ -40,7 +40,7 @@ node bin/monitorCommand.js
 ```
 cd midproxy
 
-node bin/monitorCommand.js -env dev[online/release/test]
+node bin/precautionary.js -env dev[online/release/test]
 ```
 
 ## 目录介绍

@@ -21,7 +21,7 @@ MidProxy提供了两种数据源，一种为mock，另一种为online。但是�
 ```
 cd midproxy
 
-node bin/monitor.js
+node bin/monitorCommand.js
 ```
 
 ## 目录介绍
@@ -32,7 +32,7 @@ node bin/monitor.js
   |      | -- interface_*.json
   | -- [bin]
   |      | -- exec.js 入口
-  |      | -- monitor.js 监控点
+  |      | -- monitorCommand.js 监控点
   | -- lib
   | -- midwares
   | -- public

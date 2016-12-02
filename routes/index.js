@@ -15,7 +15,6 @@ var template = require('art-template');
 var thunkify = require('thunkify');
 var http = require('http');
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
-var emitter = require(path.join(process.cwd(),'lib/hotload/watchExtends')).emitter;
 template.config('extname', '.tmpl');
 
 /**

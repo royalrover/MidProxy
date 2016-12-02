@@ -14,6 +14,7 @@ var template = require('art-template');
 var heapdump = require('heapdump');
 var async = require('async');
 var _ = require('lodash');
+var minify = require('html-minifier').minify;
 
 // 当前运行环境
 var env = process.argv[2];
@@ -47,6 +48,9 @@ global.setCache = function(kv){
 };
 
 global.resolveOtherControllers = function resolveOtherControllers(Extends,dirname){
+  if(!fs.existsSync(dirname)){
+    return;
+  }
   var controllers = fs.readdirSync(dirname);
   // 过滤隐藏文件
   controllers = checkDirsExceptDSStore(controllers);
@@ -116,6 +120,23 @@ projs.forEach(function(proj,i){
           redisUtil.setRedis(item['k'],template.compile(fs.readFileSync(path.join(tmpLocation,item.dirname,item.v.indexOf('.tmpl') > -1 ? item.v : item.v + '.tmpl'),'utf8')));
         }else{
           redisUtil.setRedis(item['k'],template.compile(fs.readFileSync(path.join(tmpLocation,'mobile',item.v.indexOf('.tmpl') > -1 ? item.v : item.v + '.tmpl'),'utf8')));
+        }
+      }else if(item.type == 'activity'){
+        if(item.dirname){
+          // 针对活动页面直接缓存压缩后的模板
+          redisUtil.setRedis(item['k'],minify(fs.readFileSync(path.join(tmpLocation,item.dirname,item.v.indexOf('.tmpl') > -1 ? item.v : item.v + '.tmpl'),'utf8')),{
+            removeComments: true,
+            collapseWhitespace: true,
+            minifyJS:true,
+            minifyCSS:true
+          });
+        }else{
+          redisUtil.setRedis(item['k'],minify(fs.readFileSync(path.join(tmpLocation,'mobile',item.v.indexOf('.tmpl') > -1 ? item.v : item.v + '.tmpl'),'utf8')),{
+            removeComments: true,
+            collapseWhitespace: true,
+            minifyJS:true,
+            minifyCSS:true
+          });
         }
       }else{
         // 非模板文件，则直接缓存序列化的内容
@@ -274,16 +295,28 @@ graceful({
 });
 
 // 堆快照
-var dump = function(){
+var dump = function(message){
   var d = new Date();
-  var name = d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate() + '_' + process.pid;
-  heapdump.writeSnapshot('/tmp/heapwatcher/' + name + '.heapsnapshot',function(err, filename){
+  var name = process.pid + '_' + message.grade + '_' + d.getFullYear() + '.' + (d.getMonth() + 1) + '.' +
+    d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+  var p = 'tmp/heapdumps/' + name + '.heapsnapshot';
+  heapdump.writeSnapshot(p,function(err, filename){
     log.info('dump written to ' + filename);
   });
-  setTimeout(function(){
-    dump();
-  },12 * 60 * 60 * 1000);
+  return p;
 };
 
-// 12h记录一次
-//dump();
+process.on('message',function(message){
+  if(message.type == 'heapdump'){
+    let p = dump(message);
+
+    process.send({
+      ip: message.ip,
+      pid: process.pid,
+      type: 'heapdump',
+      success: 1,
+      dumpPath: p,
+      grade: message.grade
+    })
+  }
+});

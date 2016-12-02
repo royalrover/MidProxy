@@ -48,28 +48,25 @@
 	{{if shopEnv.isTestEnv}}
 		<link rel="stylesheet" type="text/css" href="//assets.showjoy.net/joyf2e/vendor/gmu/reset.css" />
 		<link rel="stylesheet" type="text/css" href="//assets.showjoy.net/joyf2e/vendor/gmu/gmu.min.css" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.css" rel="stylesheet" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/shop-footer/shop-footer.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.1.7/iconfont/talent-iconfont/icon.min.css" />
 	{{else}}
-		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/reset.css" />
-		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/gmu.min.css" />
-
+		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/??gmu/reset.css,gmu/gmu.min.css?v=2016111614" />
+		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/iconfont/talent-iconfont/icon.min.css?v=2016111614" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageWithConcatRoot}}/{{shopEnv.gv_wapPageConcatPath}}/??shop-header/shop-header.min.css,shop-footer/shop-footer.min.css?v=2016111614" rel="stylesheet" />
 	{{/if}}
-
-	<link href="{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.css" rel="stylesheet" />
-
-	<link href="{{shopEnv.gv_wapPageRoot}}/shop-footer/shop-footer.min.css" rel="stylesheet" />
-	<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.1.7/iconfont/talent-iconfont/icon.min.css" />
-
 
 	<title>{{if title}}{{title}}{{else}}{{shopName}}{{/if}}</title>
 
 	{{if shopEnv.isTestEnv}}
-		<script type="text/javascript" src="https://assets.showjoy.net/joyf2e/vendor/flexible/flexible-min.js"></script>
+		<script type="text/javascript" src="//assets.showjoy.net/joyf2e/vendor/flexible/flexible-min.js"></script>
 	{{else}}
-		<script type="text/javascript" src="//cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.21/flexible/flexible-min.js"></script>
+		<script type="text/javascript" src="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/flexible/flexible-min.js"></script>
 	{{/if}}
 
 	{{if pageName != "topicActivity"}}
-		<link href="{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.css" rel="stylesheet" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.css" rel="stylesheet" />
 	{{/if}}
 
 </head>

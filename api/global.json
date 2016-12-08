@@ -12,9 +12,9 @@
       "method": "get",
       "urls": {
         "dev": "http://shopappserver.showjoy.net/",
-        "online": "http://localhost:54101/",
-        "preview": "http://localhost:54601/",
-        "test": "http://localhost:15381/"
+        "online": "http://localhost:57101/shopappserver/",
+        "preview": "http://localhost:57601/shopappserver/",
+        "test": "http://localhost:57101/shopappserver/"
       },
       "dataType": "text",
       "encoding": "utf8",
@@ -26,9 +26,9 @@
       "method": "get",
       "urls": {
         "dev": "http://shopappserver.showjoy.net/m/api/getConfig",
-        "online": "http://localhost:54101/m/api/getConfig",
-        "preview": "http://localhost:54601/m/api/getConfig",
-        "test": "http://localhost:15381/m/api/getConfig"
+        "online": "http://localhost:57101/shopappserver/m/api/getConfig",
+        "preview": "http://localhost:57601/shopappserver/m/api/getConfig",
+        "test": "http://localhost:57101/shopappserver/m/api/getConfig"
       },
       "dataType": "json",
       "encoding": "utf8",
@@ -39,14 +39,28 @@
       "id": "Mobile.getWechatInfo",
       "urls": {
         "dev": "http://shopappserver.showjoy.net/api/home/getWechatInfo",
-        "online": "http://localhost:54101/api/home/getWechatInfo",
-        "preview": "http://localhost:54601/api/home/getWechatInfo",
-        "test": "http://localhost:15381/api/home/getWechatInfo"
+        "online": "http://localhost:57101/shopappserver/api/home/getWechatInfo",
+        "preview": "http://localhost:57601/shopappserver/api/home/getWechatInfo",
+        "test": "http://localhost:57101/shopappserver/api/home/getWechatInfo"
       },
       "method": "get",
       "dataType": "json",
       "encoding": "utf8",
       "isCookieNeeded": true
+    },
+    {
+      "name": "活动页面埋点接口",
+      "id": "Activity.getHideInputValues",
+      "urls": {
+        "dev": "http://shopappserver.showjoy.net/api/test/get_config",
+        "online": "http://localhost:57101/shopappserver/api/test/get_config",
+        "preview": "http://localhost:57601/shopappserver/api/test/get_config",
+        "test": "http://localhost:57101/shopappserver/api/test/get_config"
+      },
+      "method": "get",
+      "dataType": "json",
+      "encoding": "utf8",
+      "isCookieNeeded": false
     },{
       "name": "转发认证请求",
       "id": "OAuth.send",

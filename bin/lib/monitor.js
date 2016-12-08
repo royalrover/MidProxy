@@ -127,7 +127,7 @@ exports.monit = function(zk,domainClient){
               if(process.monitSwitch == undefined || process.monitSwitch == true){
                 _query();
               }
-            },5000);
+            },10000);
           };
 
           loop();

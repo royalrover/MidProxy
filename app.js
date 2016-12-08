@@ -21,7 +21,7 @@ var env = process.argv[2];
 var mock = (process.argv[3] == 'dev' || process.argv[3] == undefined) ? 'dev' :
   process.argv[3] == 'online' ? 'online' :
     process.argv[3] == 'test' ? 'test' :
-      process.argv[3] == 'preview' ? 'preview': 'dev' ;
+      process.argv[3] == 'preview' ? 'preview': 'dev';
 
 global.apiEnv = mock;
 // 暴露env至全局，目的是为了在测试环境中采用热加载，在线上环境采用传统部署
@@ -169,6 +169,10 @@ var preHandle = function(){
   redisUtil.setRedis('f2e:shop:commonHeaderRender',template.compile(fs.readFileSync('views/mobile/shop/common/header.tmpl','utf8')));
   redisUtil.setRedis('f2e:shop:commonFootRender',template.compile(fs.readFileSync('views/mobile/shop/common/foot.tmpl','utf8')));
   redisUtil.setRedis('f2e:shop:commonFooterRender',template.compile(fs.readFileSync('views/mobile/shop/common/footer.tmpl','utf8')));
+
+  // 活动页面头尾部
+  redisUtil.setRedis('f2e:activity:commonHeadRender',template.compile(fs.readFileSync('views/mobile/activity/common/head.tmpl','utf8')));
+  redisUtil.setRedis('f2e:activity:commonFootRender',template.compile(fs.readFileSync('views/mobile/activity/common/foot.tmpl','utf8')));
 
   // 错误页面预编译
   redisUtil.setRedis('f2e:common:error50xRender',template.compile(fs.readFileSync('views/mobile/common/error/50x.tmpl','utf8')));

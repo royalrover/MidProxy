@@ -5,9 +5,9 @@
 ```
 cd midproxy
 
-node bin/exec.js -env dev online(mock) [测试环境]
+node bin/exec.js -conf dev online(mock) [测试环境]
 
-node bin/exec.js -env release online [线上环境]
+node bin/exec.js -conf release online [线上环境]
 ```
 
 MidProxy提供了两种数据源，一种为mock，另一种为online。但是由于公司[mock平台](http://mock.showjoy.net)的使用，因此

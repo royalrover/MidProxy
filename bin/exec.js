@@ -110,6 +110,11 @@ zk.promise.then(function(){
 
 
 process.once('SIGTERM', function () {
+  // todo: 需要遍历子进程一次关闭
+  for(let i in process.workers){
+    let worker = process.workers[i];
+    worker.kill();
+  }
   process.exit(0);
 });
 

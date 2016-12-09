@@ -85,7 +85,7 @@
           }
       };
 
-      asyncLoad('/api/midproxy/getWechatConfig?' + location.href);
+      asyncLoad('/api/shop/getWechatConfig?' + location.href);
 
       var d = new DO();
       d.on('wechatConfig-ready',function(config){

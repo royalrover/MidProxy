@@ -235,7 +235,7 @@ projs.forEach(function(proj){
       MidProxy.init(path.join(loc,json));
     })
   }catch(e){
-    throw e;
+    log.error(e.stack);
   }
 });
 

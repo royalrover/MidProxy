@@ -108,13 +108,15 @@ zk.promise.then(function(){
   _start(zk.zkClient);
 });
 
+/*
 
 process.once('SIGTERM', function () {
   // todo: 需要遍历子进程一次关闭
-  for(let i in process.workers){
-    let worker = process.workers[i];
-    worker.kill();
-  }
+  //for(let i in process.workers){
+  //  let worker = process.workers[i];  console.dir(worker.process.pid)
+  //  worker.kill('SIGTERM');
+  //}
   process.exit(0);
 });
 
+*/

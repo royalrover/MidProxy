@@ -49,7 +49,7 @@
       "isCookieNeeded": true
     },
     {
-      "name": "活动页面埋点接口",
+      "name": "活动页面埋点接口（改接口需要认证信息）",
       "id": "Activity.getHideInputValues",
       "urls": {
         "dev": "http://shopappserver.showjoy.net/api/test/get_config",

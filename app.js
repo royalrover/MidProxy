@@ -150,7 +150,7 @@ projs.forEach(function(proj,i){
 
     });
   }catch(e){
-    throw e;
+    log.error(e.stack);
   }
 });
 

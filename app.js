@@ -88,6 +88,7 @@ var envConfig = require('./lib/config').config();
 // 热加载模块必须在所有私有模块引用前加载
 var uaDetector = require('./midwares/uaDetector');
 var logTrace = require('./midwares/logTrace').trace;
+var auth = require('./midwares/auth');
 
 var errorHandler = require('./midwares/error')(redisUtil,log);
 
@@ -247,6 +248,9 @@ app.use(reqId());
 
 // 请求UA判断
 app.use(uaDetector.exec);
+
+// 登录检查
+app.use(auth.check);
 
 // 日志跟踪
 app.use(logTrace(log));

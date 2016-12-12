@@ -11,38 +11,63 @@
 	<meta name="description" content="{{commonEnv.description}}"/>
 	<meta name="alexaVerifyID" content="CQ9MFqujDWRsB8dm3rfIrhLYva0" />
 
-	<!-- 页面公共样式脚本 -->
-	{{if shopEnv.isTestEnv}}
-		<link rel="stylesheet" type="text/css" href="http://assets.showjoy.net/joyf2e/vendor/gmu/reset.css" />
-		<link rel="stylesheet" type="text/css" href="http://assets.showjoy.net/joyf2e/vendor/gmu/gmu.min.css" />
-	{{else}}
-		<link rel="stylesheet" type="text/css" href="http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/reset.css" />
-		<link rel="stylesheet" type="text/css" href="http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/gmu.min.css" />
+    <!-- TODO：在模板中，一定要注意代码规范，如压缩后的js代码try&catch字段会出现{}连在一起的情况，模板引擎会误认为占位符 -->
 
-	{{/if}}
+	<script type="text/javascript">
+		;(function(doc) {
+		    // 给html根节点加上webps类名
+		    function addRootTag() {
+		        doc.documentElement.className += " webpa";
+		    }
 
-	<link href="{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.css" rel="stylesheet" />
+		    // 判断是否有webp_showjoy=available这个cookie
+		    if (!/webp_showjoy=available/.test(document.cookie)) {
+		        var image = new Image();
 
-	<link href="{{shopEnv.gv_wapPageRoot}}/shop-footer/shop-footer.min.css" rel="stylesheet" />
+		        // 图片加载完成时候的操作
+		        image.onload = function() {
 
+		            // 图片加载成功且宽度为1，那么就代表支持webp了，因为这张base64图是webp格式。如果不支持会触发image.error方法
+		            if (image.width == 1) {
 
-	<title>{{shopName}}</title>
+		                // html根节点添加class，并且埋入cookie
+		                addRootTag();
+		                document.cookie = "webp_showjoy=available; max-age=31536000; domain=";
+		            }
+		        };
 
-	<!-- viewport 设置 -->
-	<script>
-	var u = navigator.userAgent;
-	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
-	var placeholderDiv = document.createElement('div');
-	if (isAndroid) {
-		placeholderDiv.innerHTML = "<meta name='viewport' content='width=375' />";
-	} else{
-		placeholderDiv.innerHTML = "<meta name='viewport' content='width=375, user-scalable=no' />";
-	}
-	document.querySelector('head').insertBefore(placeholderDiv.firstChild, document.querySelector('title'));
+		        // 一张支持alpha透明度的webp的图片，使用base64编码
+		        image.src = 'data:image/webp;base64,UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA==';
+		    } else {
+		        addRootTag();
+		    }
+		}(document));
 	</script>
 
-	<link href="{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.css" rel="stylesheet" />
+	<!-- 页面公共样式脚本 -->
+	{{if shopEnv.isTestEnv}}
+		<link rel="stylesheet" type="text/css" href="//assets.showjoy.net/joyf2e/vendor/gmu/reset.css" />
+		<link rel="stylesheet" type="text/css" href="//assets.showjoy.net/joyf2e/vendor/gmu/gmu.min.css" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.css" rel="stylesheet" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/shop-footer/shop-footer.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.1.7/iconfont/talent-iconfont/icon.min.css" />
+	{{else}}
+		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/??gmu/reset.css,gmu/gmu.min.css?v=2016111614" />
+		<link rel="stylesheet" type="text/css" href="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/iconfont/talent-iconfont/icon.min.css?v=2016111614" />
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageWithConcatRoot}}/{{shopEnv.gv_wapPageConcatPath}}/??shop-header/shop-header.min.css,shop-footer/shop-footer.min.css?v=2016111614" rel="stylesheet" />
+	{{/if}}
 
+	<title>{{if title}}{{title}}{{else}}{{shopName}}{{/if}}</title>
+
+	{{if shopEnv.isTestEnv}}
+		<script type="text/javascript" src="//assets.showjoy.net/joyf2e/vendor/flexible/flexible-min.js"></script>
+	{{else}}
+		<script type="text/javascript" src="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/flexible/flexible-min.js"></script>
+	{{/if}}
+
+	{{if pageName != "topicActivity"}}
+		<link href="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.css" rel="stylesheet" />
+	{{/if}}
 
 </head>
 <body>

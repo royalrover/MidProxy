@@ -1,7 +1,7 @@
 <!-- end of layout -->
 </div>
 <!-- 微信JS-SDK引入-->
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script>
  	  function asyncLoad(src) {
         var s = document.createElement('script');
@@ -27,7 +27,7 @@
 		  }
 	  };
 
-	  asyncLoad('http://localhost:8112/getWechatConfig');
+	  asyncLoad('/api/shop/getWechatConfig?' + location.href);
 
 	  var d = new DO();
 	  d.on('wechatConfig-ready',function(config){
@@ -39,38 +39,34 @@
 			signature: config.signature,
 			jsApiList: [config.jsApiList]
 		  });
-		  console.log(config);
 	  });
 
 	  d.on('wechatConfig-error',function(){
-        alert('微信接口请求错误，请刷新页面');
+        console && console.log && console.log('微信接口请求错误，请刷新页面');
       });
     </script>
 {{if shopEnv.isTestEnv}}
-	<script type="text/javascript" src="http://assets.showjoy.net/joyf2e/vendor/gmu/zepto.min.js"></script>
-	<script type="text/javascript" src="http://assets.showjoy.net/joyf2e/vendor/gmu/gmu.min.js"></script>
+	<script type="text/javascript" src="//assets.showjoy.net/joyf2e/vendor/gmu/zepto.min.js"></script>
+	<script type="text/javascript" src="//assets.showjoy.net/joyf2e/vendor/gmu/gmu.min.js"></script>
 {{else}}
-	<script type="text/javascript" src="http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/zepto.min.js"></script>
-	<script type="text/javascript" src="http://cdn1.showjoy.com/assets/f2e/joyf2e/vendor/0.0.2/gmu/gmu.min.js"></script>
+	<script type="text/javascript" src="//cdn1.showjoy.com/{{shopEnv.gv_vendorRoot}}/gmu/??zepto.min.js,gmu.min.js?v=2016111614"></script>
 {{/if}}
-	
-<script src="{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.js" type="text/javascript"></script>
 
-<script type="text/javascript" src="{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.js"></script>
-
-
+<!-- TODO:须注意的是，带有sourceMap的js文件，无法使用concat机制；concat默认将两个或多个文件直接拼接在一起，因此sourceMap注释部分会影响到其他js -->
+<script type="text/javascript" src="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/shop-header/shop-header.min.js"></script>
+<script type="text/javascript" src="{{shopEnv.cdn}}/{{shopEnv.gv_wapPageRoot}}/{{pageName}}/{{pageName}}.min.js"></script>
 <script>
 	$.ajax({
-		url:'http://fp.showjoy.{{if shopEnv.isTestEnv}}net{{else}}com{{/if}}/trace',
+		url:'//fp.showjoy.{{if shopEnv.isTestEnv}}net{{else}}com{{/if}}/trace',
 		data: {
 			url: location.href,
 			refer: document.referrer
 		},
 		dataType: 'jsonp'
 	});
-	</script>
+</script>
 
-	<script>
+<script>
 	var fpClickTimer;
 	var fpClickDelay = 200;
 	$(window).on('click',function(ev){
@@ -79,7 +75,7 @@
 		}
 		fpClickTimer = setTimeout(function(){
 		  $.ajax({
-			url: 'http://fp.showjoy.{{if shopEnv.isTestEnv}}net{{else}}com{{/if}}/click',
+			url: '//fp.showjoy.{{if shopEnv.isTestEnv}}net{{else}}com{{/if}}/click',
 			dataType: 'jsonp',
 			data: {
 				url: location.href,

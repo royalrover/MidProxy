@@ -1,0 +1,9 @@
+{
+  "connect": "172.16.1.29:2180",
+  "config": {
+    "sessionTimeout": 3000,
+    "spinDelay": 1000,
+    "retries" : 1
+  }
+}
+

@@ -11,9 +11,9 @@ var renderErrorPage = function(code,error,redisUtil,log){
   var prom;
 
   if(code >= 500){
-    prom = redisUtil.getRedis('f2e_commonError50xRender');
+    prom = redisUtil.getRedis('f2e:common:error50xRender');
   }else{
-    prom = redisUtil.getRedis('f2e_commonError404Render');
+    prom = redisUtil.getRedis('f2e:common:error404Render');
   }
 
   log.error('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error,\n' + error.stack);

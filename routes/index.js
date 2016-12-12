@@ -15,7 +15,6 @@ var template = require('art-template');
 var thunkify = require('thunkify');
 var http = require('http');
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
-var emitter = require(path.join(process.cwd(),'lib/hotload/watchExtends')).emitter;
 template.config('extname', '.tmpl');
 
 /**
@@ -23,23 +22,31 @@ template.config('extname', '.tmpl');
  * @description 首页心跳检查
  */
 router.get('/',function* (){
+  this.status = 200;
+  this.body = 'hello ShowJoy';
+});
+
+/**
+ * @request /status
+ * @description 心跳检查
+ */
+router.get('/status',function* (){
   log.info('Nginx心跳检查');
-  // TODO: 待后端实现接口
-  /*
-   var code = yield new Promise(function(resolve,reject){
-   http.get({
-   host: '0.0.0.0',
-   port: 8080,
-   path: '/status'
-   }, function(res) {
-   resolve(res.statusCode);
-   }).on('error', function(err) {
-   log.error('MidProxy与Tomcat心跳检查失败\n' + err.stack);
-   resolve(404);
-   });
-   });
-   this.status = code;*/
-  this.body = 'hello world';
+  var proxy = MidProxy.create( 'Server.checkHeartbeat' );
+  proxy
+    .checkHeartbeat()
+    .withCookie(this.request.header['cookie']);
+  var ret = yield new Promise(function(resolve,reject){
+    proxy._done(resolve,reject);
+  });
+
+  if(ret[0] == 'success'){
+    this.status = 200;
+    this.body = 'hello world';
+  }else{
+    this.status = 500;
+    this.body = 'error';
+  }
 });
 
 /**
@@ -104,9 +111,6 @@ router.get('/m',function* (next){
     };
 
     try {
-      /*html = app._cache._commonBasicHeadRender(renderObj) + app._cache._commonHeaderRender(renderObj)
-        + app._cache._channelHomePageRender(renderObj)
-        + app._cache._commonFooterRender(renderObj) + app._cache._channelFootRender(renderObj);*/
 
       var segs = yield new Promise(function(res,rej){
         async.parallel([
@@ -197,7 +201,6 @@ router.get('/m',function* (next){
 
           // 返回数据
           res([null,html]);
-        //  log.info('request[id=' + self.id + ',path='+ self.path + self.search + '] template render successfully');
         });
       });
 
@@ -237,22 +240,22 @@ router.get('/m',function* (next){
 
 
 /**
- * @request /getWechatConfig
+ * @request /shop/getWechatConfig
  * @description 获取微信配置，采用BigPipe渲染
  */
-router.get('/getWechatConfig',function* (){
+router.get('/api/shop/getWechatConfig',function* (){
   var proxy = MidProxy.create( 'Mobile.*' );
   var ret;
   // BigPipe形式出发wechat配置
-  //  console.time('asyncWechatConfig');
-
   proxy
-    .getWechatInfo();
+    .getWechatInfo({
+      url: this.querystring
+    })
+    .withCookie(this.request.header['cookie']);
 
   ret = yield new Promise(function(resolve,reject){
     proxy._done(resolve,reject);
   });
-  //  console.timeEnd('asyncWechatConfig');
 
   // 微信配置接口异步请求错误，则触发“wechatConfig-error”事件，弹窗提醒
   if(ret instanceof Error){
@@ -318,7 +321,22 @@ Extends.View =  View;
 Extends.log = log;
 Extends.lodash = _;
 
-var load = function(projs,trigger){
+// 默认只提供两种请求，即get和post
+Extends.use = function(urlPattern,ops){
+  if(!ops || typeof ops !== 'object'){
+    log.error('params must be an Object!');
+    return;
+  }
+  var isGet = ops.method ? ops.method.toLowerCase() == 'get' ? true : false : true;
+  ops.Extends = Extends;
+  if(isGet){
+    Extends.get(urlPattern,out(ops));
+  }else{
+    Extends[ops.method.toLowerCase()](urlPattern,out(ops));
+  }
+};
+
+var load = function(projs){
   projs.forEach(function(proj){
     var loc = path.join(base,proj,'routes');
     var file = path.join(loc,'page');
@@ -330,26 +348,19 @@ var load = function(projs,trigger){
         m = require(file);
         m && m.bind && m.bind(Extends);
       }
+      // 加载page下的其他路由模块
+      resolveOtherControllers(Extends,file);
 
       if(fs.existsSync(api) && fs.existsSync(path.join(api,'index.js'))){
         m = require(api);
         m && m.bind && m.bind(Extends);
       }
+      // 加载api下的其他路由模块
+      resolveOtherControllers(Extends,api);
     }
   });
 };
 
 load(projs);
-
-if(runEnv == 'dev'){
-  // 防止内存泄漏
-  emitter.removeAllListeners('extendsAdd');
-  emitter.on('extendsAdd',function(data){
-    log.info('extendsAdd >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>');
-    projs = data.projs;
-    load(projs,'trigger');
-  });
-}
-
 
 module.exports = router;

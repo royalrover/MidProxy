@@ -7,9 +7,9 @@
       __showjoyDSP.script.type = 'text/javascript';
       __showjoyDSP.script.async = true;
       if (a && a.location && a.location.protocol && "https:" == a.location.protocol.toString().toLowerCase()) {
-		__showjoyDSP.script.src = "http://{{if commonEnv.isTestEnv}} market.m.showjoy.net{{else}}market.m.showjoy.com{{/if}}/getImplantJs?url=" + location.href;
+		__showjoyDSP.script.src = "//{{if commonEnv.isTestEnv}} market.m.showjoy.net{{else}}market.m.showjoy.com{{/if}}/getImplantJs?url=" + location.href;
 		} else {
-		__showjoyDSP.script.src = "http://{{if commonEnv.isTestEnv}}market.m.showjoy.net{{else}}market.m.showjoy.com{{/if}}/getImplantJs?url=" + location.href;
+		__showjoyDSP.script.src = "//{{if commonEnv.isTestEnv}}market.m.showjoy.net{{else}}market.m.showjoy.com{{/if}}/getImplantJs?url=" + location.href;
 		}
       var s = a.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(__showjoyDSP.script, s);
@@ -19,7 +19,7 @@
 
 <script>
 $.ajax({
-	url:'http://fp.showjoy.{{if commonEnv.isTestEnv}}net{{else}}com{{/if}}/trace',
+	url:'//fp.showjoy.{{if commonEnv.isTestEnv}}net{{else}}com{{/if}}/trace',
 	data: {
         url: location.href
     },
@@ -36,7 +36,7 @@ $(window).on('click',function(ev){
     }
     fpClickTimer = setTimeout(function(){
       $.ajax({
-        url: 'http://fp.showjoy.{{if commonEnv.isTestEnv}}net{{else}}com{{/if}}/click',
+        url: '//fp.showjoy.{{if commonEnv.isTestEnv}}net{{else}}com{{/if}}/click',
         dataType: 'jsonp',
         data: {
         	url: location.href,
@@ -50,7 +50,7 @@ $(window).on('click',function(ev){
 
 <!-- 显隐之尘站内流量跟踪 -->
 <script >
-var collectAddress='http://doa.showjoy.{{if commonEnv.isTestEnv}}net{{else}}com{{/if}}/collect';
+var collectAddress='//doa.showjoy.{{if commonEnv.isTestEnv}}net{{else}}com{{/if}}/collect';
 var _maq = _maq || [];
 (function() {
     var ma = document.createElement('script'); ma.type = 'text/javascript'; ma.async = true;

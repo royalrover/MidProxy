@@ -1,5 +1,5 @@
 {
-  "connect": "172.16.1.29:2180",
+  "connect": "172.16.1.32:2180",
   "config": {
     "sessionTimeout": 3000,
     "spinDelay": 1000,

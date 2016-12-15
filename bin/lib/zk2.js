@@ -5,7 +5,7 @@ var ZK = require('./node-zookeeper-client-promisy.js');
 var ZKContant = require ("node-zookeeper-client").CreateMode;
 var logger = require('../../lib/log4js/logger');
 
-var env = process.argv[3];
+var env = process.argv[4];
 var zkConfig;
 
 switch(env){

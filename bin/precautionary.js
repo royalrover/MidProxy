@@ -98,3 +98,6 @@ domainServer.on('message',function(message,client){
 
 });
 
+process.on('uncaughtException',function(e){
+  logger.error('PRECAUTIONARY PROCESS ERROR: ' + e.message + ' \n' + e.stack);
+});

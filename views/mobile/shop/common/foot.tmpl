@@ -37,7 +37,7 @@
 			timestamp: config.timestamp,
 			nonceStr: config.nonceStr,
 			signature: config.signature,
-			jsApiList: [config.jsApiList]
+			jsApiList: config.jsApiList.replace(/'/g,'').split(',')
 		  });
 	  });
 

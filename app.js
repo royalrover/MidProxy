@@ -328,3 +328,8 @@ process.on('message',function(message){
     })
   }
 });
+
+process.on('disconnect',function(){
+  log.info('worker pid:' + process.pid + ' is disconnect,and will exit!');
+  process.exit(0);
+});

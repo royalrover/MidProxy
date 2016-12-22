@@ -9,8 +9,8 @@ var env = process.argv[4];
 var zkConfig;
 
 switch(env){
-  case 'release':
-    zkConfig = require('./zookeeper.release.json');
+  case 'online':
+    zkConfig = require('./zookeeper.online.json');
     break;
   case 'preview':
     zkConfig = require('./zookeeper.preview.json');

@@ -27,6 +27,15 @@ router.get('/',function* (){
 });
 
 /**
+ * @request /shopui
+ * @description 首页心跳检查
+ */
+router.get('/shopui',function* (){
+  this.status = 200;
+  this.body = 'hello ShowJoy';
+});
+
+/**
  * @request /status
  * @description 心跳检查
  */

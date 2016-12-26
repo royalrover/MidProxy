@@ -13,7 +13,7 @@ var pids = [];
 var count = 0;
 // 跨进程通信客户端
 var DomainClient = require('./lib/domainSocket/Client');
-var domainClient = new DomainClient();
+global.domainClient = new DomainClient();
 
 var _start = function(zkClient){
   var cluster = cfork({
@@ -101,7 +101,7 @@ var _start = function(zkClient){
   process.workers = cluster.workers;
   // TODO: 恢复阶段 需要再次监控
   var monitor = require('./lib/monitor');
-  monitor.monit(zk,domainClient);
+  monitor.monit(zk,domainClient,'init');
 };
 
 zk.promise.then(function(){

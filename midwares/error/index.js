@@ -27,7 +27,8 @@ module.exports = function(redisUtil,log){
       var message = 'errors.errors.pageNotFound',prom,html;
       var app = this.app;
       var renderObj = {
-        commonEnv: app.EnvConfig['common_' + app.env]
+        commonEnv: app.EnvConfig['common_' + app.env],
+        shopEnv: app.EnvConfig['shop_' + app.env]
       },self = this;
 
       if(this.status >= 500){
@@ -70,7 +71,8 @@ module.exports = function(redisUtil,log){
         prom,html;
       var app = this.app;
       var renderObj = {
-        commonEnv: app.EnvConfig['common_' + app.env]
+        commonEnv: app.EnvConfig['common_' + app.env],
+        shopEnv: app.EnvConfig['shop_' + app.env]
       };
 
       // 50x errors should never be cached

@@ -176,8 +176,8 @@ var preHandle = function(){
   redisUtil.setRedis('f2e:activity:commonFootRender',template.compile(fs.readFileSync('views/mobile/activity/common/foot.tmpl','utf8')));
 
   // 错误页面预编译
-  redisUtil.setRedis('f2e:common:error50xRender',template.compile(fs.readFileSync('views/mobile/common/error/50x.tmpl','utf8')));
-  redisUtil.setRedis('f2e:common:error404Render',template.compile(fs.readFileSync('views/mobile/common/error/404.tmpl','utf8')));
+  redisUtil.setRedis('f2e:common:error50xRender',template.compile(fs.readFileSync('views/mobile/shop/error/50x.tmpl','utf8')));
+  redisUtil.setRedis('f2e:common:error404Render',template.compile(fs.readFileSync('views/mobile/shop/error/404.tmpl','utf8')));
 };
 
 preHandle();

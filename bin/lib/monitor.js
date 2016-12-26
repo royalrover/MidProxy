@@ -8,7 +8,7 @@ var logger = require('../../lib/log4js/logger');
 var CAUTION = 838860800; // 800MB
 var DANGER = 1258291200; // 1.2GB
 
-exports.monit = function(zk,domainClient){
+exports.monit = function(zk,domainClient,isInit){
   if(!zk)
     return;
   var zkClient = zk.zkClient;
@@ -16,21 +16,24 @@ exports.monit = function(zk,domainClient){
   var zkRoot = '/midproxy/info/' + localIp;
 
   // 接收来自预警进程的消息，通知对应workers打点堆镜像
-  domainClient.on('message',function(message){
-    if(message.type == 'heapdump'){
-      for(let i in process.workers){
-        let worker = process.workers[i];
-        if(worker.process.pid == message.pid){
-          worker.send({
-            type: 'heapdump',
-            ip: message.ip,
-            grade: message.grade
-          });
-          break;
+  if(isInit){
+    domainClient.on('message',function(message){
+      if(message.type == 'heapdump'){
+        for(let i in process.workers){
+          let worker = process.workers[i];
+          if(worker.process.pid == message.pid){
+            worker.send({
+              type: 'heapdump',
+              ip: message.ip,
+              grade: message.grade
+            });
+            break;
+          }
         }
       }
-    }
-  });
+    });
+  }
+
 
   (function _query(){
     zkClient.getChildren(zkRoot)

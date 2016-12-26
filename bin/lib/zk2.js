@@ -171,7 +171,7 @@ var restore = function(zkClient){
       monitor.monit({
         zkClient: zkClient,
         ip: localIp
-      });
+      },domainClient);
     })
     .catch(function(e){
       logger.error('ZooKeeper module error code when restore: ' + e);

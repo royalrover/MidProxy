@@ -4,7 +4,7 @@
   "appender": [{
     "type": "INFO",
     "logdir": "/tmp/log4js/",
-    "pattern": "%d %r %x{name}:%z %p - %m%n",
+    "pattern": "%d %x{name}:%z %p - %m%n",
     "rollingFile": false,
     "name": "info.log",
     "nameformat": null,
@@ -17,7 +17,7 @@
   },{
     "type": "ERROR",
     "logdir": "/tmp/log4js/",
-    "pattern": "%d %r %x{name}:%z %p - %m%n",
+    "pattern": "%d %x{name}:%z %p - %m%n",
     "rollingFile": false,
     "name": "error.log",
     "nameformat": null,
@@ -30,7 +30,7 @@
   },{
     "type": "TRACE",
     "logdir": "/tmp/log4js/",
-    "pattern": "%d %r %x{name}:%z %p - %m%n",
+    "pattern": "%d %x{name}:%z %p - %m%n",
     "rollingFile": false,
     "name": "trace.log",
     "nameformat": null,

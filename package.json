@@ -30,6 +30,7 @@
     "less-middleware": "1.0.x",
     "lodash": "^4.13.1",
     "log4js": "^0.6.36",
+    "midlog": "0.0.1",
     "mockjs": "^1.0.1-beta2",
     "multimeter": "^0.1.1",
     "node-zookeeper-client": "^0.2.2",

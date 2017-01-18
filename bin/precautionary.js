@@ -5,7 +5,6 @@ var path = require('path');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
 var DomainServer = require('./lib/domainSocket/Server');
-var logger = require('../lib/log4js/logger');
 var oldTimeCaution = {
   timestamp: 0,
   cpu: 0,
@@ -17,6 +16,8 @@ var oldTimeCaution = {
 };
 var cautionInterval = 30 * 60 * 1000; // 半小时
 var dangerInterval = 30 * 60 * 1000;
+// 日志
+require('midlog')(require('../lib/log4js/midlog.json'));
 
 var domainServer = new DomainServer();
 domainServer.listen(function(){

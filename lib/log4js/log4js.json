@@ -11,7 +11,7 @@
       "filename": "info.log",
       "layout": {
         "type": "pattern",
-        "pattern": "%d %r [%x{name}] %p - %m%n",
+        "pattern": "%d %r [%x{name}:%z] %p - %m%n",
         "tokens": {
           "name": "MidProxy"
         }
@@ -22,7 +22,7 @@
       "filename": "error.log",
       "layout": {
         "type": "pattern",
-        "pattern": "%d %[%r [%x{name}] %p -%] %m%n",
+        "pattern": "%d %[%r [%x{name}:%z] %p -%] %m%n",
         "tokens": {
           "name": "MidProxy"
         }
@@ -33,7 +33,7 @@
       "filename": "trace.log",
       "layout": {
         "type": "pattern",
-        "pattern": "%d %[%r [%x{name}] %p -%] %m%n",
+        "pattern": "%d %[%r [%x{name}:%z] %p -%] %m%n",
         "tokens": {
           "name": "MidProxy"
         }

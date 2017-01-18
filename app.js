@@ -14,6 +14,7 @@ var template = require('art-template');
 var heapdump = require('heapdump');
 var async = require('async');
 var _ = require('lodash');
+var midlog = require('midlog');
 var minify = require('html-minifier').minify;
 
 // 当前运行环境
@@ -22,12 +23,14 @@ var mock = (process.argv[3] == 'dev' || process.argv[3] == undefined) ? 'dev' :
   process.argv[3] == 'online' ? 'online' :
     process.argv[3] == 'test' ? 'test' :
       process.argv[3] == 'preview' ? 'preview': 'dev';
+var logValve = midlog(require('./lib/log4js/midlog.json'));
 
 global.apiEnv = mock;
 // 暴露env至全局，目的是为了在测试环境中采用热加载，在线上环境采用传统部署
 global.runEnv = env;
-// 全局log对象,下面的模块可能依赖log
-global.log = require('./lib/log4js/logger');
+// 全局logger对象
+//global.log = require('./lib/log4js/logger');
+
 global.redisUtil = require('./lib/cache/redisUtil');
 // 过滤隐藏文件
 global.checkDirsExceptDSStore = function(dirs){
@@ -90,7 +93,7 @@ var uaDetector = require('./midwares/uaDetector');
 var logTrace = require('./midwares/logTrace').trace;
 var auth = require('./midwares/auth');
 
-var errorHandler = require('./midwares/error')(redisUtil,log);
+var errorHandler = require('./midwares/error')(redisUtil);
 
 var app = koa();
 
@@ -106,12 +109,12 @@ projs.forEach(function(proj,i){
     pkgConfig = require(pkgConfig);
     cache = pkgConfig.cache;
     if(Object.prototype.toString.call(cache) !== '[object Array]'){
-      log.error('cache must be an Array!');
+      logger.error('cache must be an Array!');
       return;
     }
     cache.forEach(function(item){
       if(!item.v || !item.k){
-        log.error('cache need have an "k" and "v" property!');
+        logger.error('cache need have an "k" and "v" property!');
         return;
       }
       // 默认针对模板进行编译后缓存
@@ -151,7 +154,7 @@ projs.forEach(function(proj,i){
 
     });
   }catch(e){
-    log.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -236,12 +239,12 @@ projs.forEach(function(proj){
       MidProxy.init(path.join(loc,json));
     })
   }catch(e){
-    log.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
-// 绑定到上下文 EnvConfig属性
-//app.use(envConfig.config);
+// 绑定midlog中间件
+app.use(logValve);
 
 // binding “id” to context
 app.use(reqId());
@@ -253,7 +256,7 @@ app.use(uaDetector.exec);
 app.use(auth.check);
 
 // 日志跟踪
-app.use(logTrace(log));
+app.use(logTrace());
 
 // HTTP Header: X-Response-Time
 app.use(responseTime());
@@ -292,7 +295,7 @@ app.use(errorHandler.error404);
 
 app.use(errorHandler.error50x);
 
-log.info("MidProxy's master process is listening on port 8112");
+logger.info("MidProxy's master process is listening on port 8112");
 
 var server = app.listen(8112);
 
@@ -309,27 +312,34 @@ var dump = function(message){
     d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
   var p = 'tmp/heapdumps/' + name + '.heapsnapshot';
   heapdump.writeSnapshot(p,function(err, filename){
-    log.info('dump written to ' + filename);
+    logger.info('dump written to ' + filename);
   });
   return p;
 };
 
 process.on('message',function(message){
-  if(message.type == 'heapdump'){
-    let p = dump(message);
+  switch(message.type){
+    case 'heapdump':
+      let p = dump(message);
 
-    process.send({
-      ip: message.ip,
-      pid: process.pid,
-      type: 'heapdump',
-      success: 1,
-      dumpPath: p,
-      grade: message.grade
-    })
+      process.send({
+        ip: message.ip,
+        pid: process.pid,
+        type: 'heapdump',
+        success: 1,
+        dumpPath: p,
+        grade: message.grade
+      });
+      break;
+
+    // 接收到主进程返回的服务端列表
+    case 'nodes':
+      global.servers = message.nodes;
+      break;
   }
 });
 
 process.on('disconnect',function(){
-  log.info('worker pid:' + process.pid + ' is disconnect,and will exit!');
+  logger.info('worker pid:' + process.pid + ' is disconnect,and will exit!');
   process.exit(0);
 });

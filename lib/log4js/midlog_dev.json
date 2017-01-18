@@ -1,0 +1,44 @@
+{
+  "env": "development",
+  "exportGlobalLogger": true,
+  "appender": [{
+    "type": "INFO",
+    "logdir": "/tmp/log4js/",
+    "pattern": "%d %x{name}:%z %p - %m%n",
+    "rollingFile": false,
+    "name": "info.log",
+    "nameformat": null,
+    "mkdir": true,
+    "tokens": {
+      "name": "MidProxy"
+    },
+    "cacheSize": 1,
+    "flushTimeout": 1000
+  },{
+    "type": "ERROR",
+    "logdir": "/tmp/log4js/",
+    "pattern": "%d %x{name}:%z %p - %m%n",
+    "rollingFile": false,
+    "name": "error.log",
+    "nameformat": null,
+    "mkdir": true,
+    "tokens": {
+      "name": "MidProxy"
+    },
+    "cacheSize": 1,
+    "flushTimeout": 1000
+  },{
+    "type": "TRACE",
+    "logdir": "/tmp/log4js/",
+    "pattern": "%d %x{name}:%z %p - %m%n",
+    "rollingFile": false,
+    "name": "trace.log",
+    "nameformat": null,
+    "mkdir": true,
+    "tokens": {
+      "name": "MidProxy"
+    },
+    "cacheSize": 1,
+    "flushTimeout": 1000
+  }]
+}

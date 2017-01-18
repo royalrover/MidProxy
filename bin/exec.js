@@ -5,8 +5,10 @@ var fs = require('fs');
 var util = require('util');
 var cfork = require('cfork');
 var nodemailer = require('nodemailer');
+var midlog = require('midlog');
 var cpus = require('os').cpus().length;
-var logger = require('../lib/log4js/logger');
+// 配置日志
+midlog(require('../lib/log4js/midlog.json'));
 var zk = require('./lib/zk2');
 var contant = zk.Contant;
 var pids = [];
@@ -14,6 +16,8 @@ var count = 0;
 // 跨进程通信客户端
 var DomainClient = require('./lib/domainSocket/Client');
 global.domainClient = new DomainClient();
+// 分布式节点(不包括本机)
+global.globalNodesWithoutLocal = [];
 
 var _start = function(zkClient){
   var cluster = cfork({
@@ -51,17 +55,31 @@ var _start = function(zkClient){
 
       // 每fork一个子进程，都侦听message事件，处理内存打点和邮件发送
       worker.on('message',function(message){
-        if(message.type == 'heapdump' && message.success == 1){
-          domainClient.send({
-            type: 'dumpover',
-            ip: message.ip,
-            pid: message.pid,
-            path: message.dumpPath,
-            success: 1,
-            grade: message.grade
-          });
+        switch(message.type){
+          case 'heapdump':
+            if(message.success == 1){
+              domainClient.send({
+                type: 'dumpover',
+                ip: message.ip,
+                pid: message.pid,
+                path: message.dumpPath,
+                success: 1,
+                grade: message.grade
+              });
+            }
+            break;
 
+          // 请求容灾，交付给其他主机的服务器,发送所有主机节点给worker
+          /*case 'recovery':
+            worker.send({
+              type: 'nodes',
+              // 再次请求本地主机IP
+              nodes: globalNodesWithoutLocal
+            });
+            break;*/
         }
+
+
       });
     })
     .on('listening', function (worker, address) {
@@ -104,8 +122,38 @@ var _start = function(zkClient){
   monitor.monit(zk,domainClient,'init');
 };
 
+// 获取分布式服务节点
+var getNodes = function(path,zk){
+  var localIP = zk.ip;
+
+  // 使用一次性的watcher做监控
+  zk.zkClient.getChildren(path,function(event){
+    getNodes(path,zk);
+  }).
+    then(function(children){
+      globalNodesWithoutLocal = [];
+      children.forEach(function(ip){
+        if(ip !== localIP){
+          globalNodesWithoutLocal.push(ip);
+        }
+      });
+      for(let i in process.workers){
+        let worker = process.workers[i];
+        // In a worker, this function will close all servers, wait for the 'close' event on those servers,
+        // and then disconnect the IPC channel.
+        worker.send({
+          type: 'nodes',
+          nodes: globalNodesWithoutLocal
+        })
+      }
+    },function(err){
+      logger.error('zk getChildren encouter error! ' + err.stack);
+    });
+};
+
 zk.promise.then(function(){
   _start(zk.zkClient);
+  getNodes('/midproxy/info',zk);
 });
 
 process.once('SIGTERM', function () {
@@ -118,3 +166,7 @@ process.once('SIGTERM', function () {
   }
   process.exit(0);
 });
+
+process.on('uncaughtException',function(e){
+  logger.error(e)
+})

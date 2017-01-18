@@ -3,8 +3,6 @@ var path = require('path');
 var net = require('net');
 var ZK = require('./node-zookeeper-client-promisy.js');
 var ZKContant = require ("node-zookeeper-client").CreateMode;
-var logger = require('../../lib/log4js/logger');
-
 var env = process.argv[4];
 var zkConfig;
 
@@ -92,7 +90,9 @@ var actions = function(zkClient){
             }
           });
       }
-      return zkClient.create('/midproxy/info/' + localIp,null).
+
+      // 针对ip节点，也设置为ephemeral
+      return zkClient.create('/midproxy/info/' + localIp,null,ZKContant.EPHEMERAL).
         then(function(){
           // 使用 /isAlive 叶子节点标识当前主机ip节点是否存活
           return zkClient.create('/midproxy/info/' + localIp + '/isAlive',new Buffer('1'),ZKContant.EPHEMERAL);
@@ -106,6 +106,7 @@ var actions = function(zkClient){
     });
 };
 
+// 恢复ZK现场
 var restore = function(zkClient){
   return new Promise(function(res,rej){
     getLocalIP(function(e,ip){
@@ -137,7 +138,7 @@ var restore = function(zkClient){
             }
           });
       }
-      return zkClient.create('/midproxy/info/' + localIp,null).
+      return zkClient.create('/midproxy/info/' + localIp,null,ZKContant.EPHEMERAL).
         then(function(){
           // 使用 /isAlive 叶子节点标识当前主机ip节点是否存活
           return zkClient.create('/midproxy/info/' + localIp + '/isAlive',new Buffer('1'),ZKContant.EPHEMERAL);

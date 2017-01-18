@@ -6,8 +6,8 @@ var template = require('art-template');
 var View = require(path.join(process.cwd(),'/lib/proxy/viewReadStream')).View;
 var _ = require('lodash');
 
-var renderErrorPage = function(code,error,redisUtil,log){
-  log.info('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error');
+var renderErrorPage = function(code,error,redisUtil){
+  this.logger.info('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error');
   var prom;
 
   if(code >= 500){
@@ -16,11 +16,11 @@ var renderErrorPage = function(code,error,redisUtil,log){
     prom = redisUtil.getRedis('f2e:common:error404Render');
   }
 
-  log.error('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error,\n' + error.stack);
+  this.logger.error('request[id=' + this.id + ',path='+ this.path + this.search + '] render encountered an error,\n' + error.stack);
   return prom;
 };
 
-module.exports = function(redisUtil,log){
+module.exports = function(redisUtil){
 
   return {
       error404: function* (next){
@@ -40,7 +40,7 @@ module.exports = function(redisUtil,log){
         'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'
       });
       if (this.method.toLowerCase() === 'get') {
-        prom = renderErrorPage.call(this,404,new Error(message),redisUtil,log);
+        prom = renderErrorPage.call(this,404,new Error(message),redisUtil);
         yield new Promise(function(res){
           prom.then(function(reply) {
             vm.runInThisContext('var fn = ' + reply, {filename: 'middleware/error'});
@@ -80,7 +80,7 @@ module.exports = function(redisUtil,log){
 
 
       if (this.method.toLowerCase() === 'get') {
-        prom = renderErrorPage.call(this, 500, err,redisUtil,log);
+        prom = renderErrorPage.call(this, 500, err,redisUtil);
         yield new Promise(function(res){
           prom.then(function(reply){
             vm.runInThisContext('var fn = ' + reply, {filename: 'middleware/error'});
@@ -120,4 +120,4 @@ module.exports = function(redisUtil,log){
       }
     }
   };
-}
+};

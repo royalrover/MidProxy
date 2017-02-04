@@ -4,6 +4,7 @@
 var path = require('path');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
+var dingding = require('./lib/dingding');
 var DomainServer = require('./lib/domainSocket/Server');
 var oldTimeCaution = {
   timestamp: 0,
@@ -94,6 +95,13 @@ domainServer.on('message',function(message,client){
 
       // 删除堆快照
       fs.unlinkSync(message.path);
+    });
+
+    // 发送钉钉消息
+    dingding({
+      message: message,
+      cpu: cpu,
+      memory: memory
     });
   }
 

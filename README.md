@@ -5,11 +5,13 @@
 ```
 cd midproxy
 
-node bin/exec.js -conf dev test [测试环境]
+sh bin/start.dev.sh [本地开发环境]
 
-node bin/exec.js -conf release preview [预发环境]
+sh bin/start.test.sh [测试环境]
 
-node bin/exec.js -conf release online [线上环境]
+sh bin/start.preview.sh [预发环境]
+
+sh bin/start.online.sh [线上环境]
 ```
 
 MidProxy提供了两种数据源，一种为mock，另一种为online。但是由于公司[mock平台](http://mock.showjoy.net)的使用，因此
@@ -30,7 +32,7 @@ node bin/monitorCommand.js
 
 通过命令行可以粗略看出当前主进程所有子进程的性能指标。
 
-### 分布式图形监控预警系统
+### 分布式图形监控预警系统(默认已在启动脚本中开启)
 命令行监控只能针对一台主机，而在线上环境中不仅需要知道单个节点的状态，还需了解全局的信息，因此分布式图形监控系统应运而生。
 
 分布式图形监控预警系统，基于分布式节点的数据同步机制，在保证单点故障、故障恢复、分布式数据最终一致性的基础上向上层提供可查询接口。在此基础上

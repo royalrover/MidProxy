@@ -5,7 +5,9 @@
 ```
 cd midproxy
 
-node bin/exec.js -conf dev online(mock) [测试环境]
+node bin/exec.js -conf dev test [测试环境]
+
+node bin/exec.js -conf release preview [预发环境]
 
 node bin/exec.js -conf release online [线上环境]
 ```

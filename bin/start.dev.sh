@@ -2,9 +2,11 @@
 
 cd /usr/local/midproxy/ShowJoy-MidProxy-CI
 
+# 打开预警进程
 node ./bin/precautionary.js &
 
-node ./bin/exec.js -conf dev test &
+# 开启MidProxy（本地开发环境）
+node ./bin/exec.js -conf dev dev &
 
 while true
 do

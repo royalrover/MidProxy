@@ -23,7 +23,7 @@ var _start = function(zkClient){
   var cluster = cfork({
     exec: path.join(__dirname, '../app.js'),
     duration: 60000,
-    args: [process.argv[3],process.argv[4]] // midProxy运行环境  cmd: node bin/exec.js -e dev online(mock)
+    args: [process.argv[3],process.argv[4]] // midProxy运行环境  cmd: node bin/exec.js -e dev online
   })
     .on('fork', function (worker) {
       var pid = worker.process.pid;

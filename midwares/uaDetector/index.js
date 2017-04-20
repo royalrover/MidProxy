@@ -15,9 +15,9 @@ exports.exec = function* (next){
       isIPad: u.indexOf('iPad') > -1, //是否iPad
       isWebApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
       isWeixin: u.toLowerCase().indexOf('micromessenger') > -1, //是否微信内置浏览器,
-      isShowjoyiOS: u.indexOf('ShowJoyiOS') > -1, // //是否iOS官方客户端内置浏览器
-      isShowjoyAndroid: u.indexOf('ShowJoyAndroid') > -1, //是否Android官方客户端内置浏览器
-      isIOSAPP: u.indexOf('iOSAPP') > -1, // //是否iOS官方客户端内置浏览器
+      isShowjoyiOS: u.indexOf('ShowJoyiOS') > -1 || u.indexOf('showjoyshopiOS'), // 是否iOS官方客户端内置浏览器
+      isShowjoyAndroid: u.indexOf('ShowJoyAndroid') > -1 || u.toLowerCase().indexOf('showjoyshopandroid'), //是否Android官方客户端内置浏览器
+      isIOSAPP: u.indexOf('iOSAPP') > -1, // 是否iOS官方客户端内置浏览器
       isAndroidAPP: u.indexOf('androidAPP') > -1, //是否Android官方客户端内置浏览器
       isApp: this.isShowjoyiOS || this.isShowjoyAndroid || this.isIOSAPP || this.isAndroidAPP || false
     };

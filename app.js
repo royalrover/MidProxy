@@ -86,7 +86,6 @@ global.out = require('./lib/router-tools/out').out;
 
 var router = require('./routes/index');
 var MidProxy = require('./lib/proxy/midproxy');
-var envConfig = require('./lib/config').config();
 
 // 热加载模块必须在所有私有模块引用前加载
 var uaDetector = require('./midwares/uaDetector');
@@ -97,7 +96,10 @@ var errorHandler = require('./midwares/error')(redisUtil);
 
 var app = koa();
 
-// 加载外挂的预配置
+// 公共模板配置对象
+var envConfig = {};
+
+// 加载extends工程的预配置
 var root = process.cwd();
 var base = path.join(process.cwd(),'extends/');
 var projs = fs.readdirSync(base);
@@ -112,6 +114,35 @@ projs.forEach(function(proj,i){
       logger.error('cache must be an Array!');
       return;
     }
+
+    // 设置模板配置文件（针对公共头尾模板工程"mp-midproxy-commonview"）
+    let configRoot = path.join(tmpLocation,'mobile'),
+      dirs = fs.readdirSync(configRoot);
+    // 过滤隐藏文件
+    dirs = dirs.filter(function(d){
+      if(d.match(/\.\w+/i)){
+        return false;
+      }
+      var stat = fs.statSync(path.join(configRoot,d));
+      if(!stat.isDirectory()){
+        return false;
+      }
+      return true;
+    });
+
+    dirs.forEach(function(d,i){
+      var p = path.join(configRoot,d,'config');
+      var names = ['dev','release'];
+      names.forEach(function(n){
+        var file = path.join(p,n + '.json');
+        if(fs.existsSync(file)){
+          // 设置配置项
+          envConfig[d + '_' + n] = require(file);
+        }
+      });
+    });
+
+    // 设置模板缓存
     cache.forEach(function(item){
       if(!item.v || !item.k){
         logger.error('cache need have an "k" and "v" property!');
@@ -157,33 +188,6 @@ projs.forEach(function(proj,i){
     logger.error(e.stack);
   }
 });
-
-// 预编译views/mobile/common/* 的模板
-var preHandle = function(){
-  // 尚妆公共头尾
-  redisUtil.setRedis('f2e:common:basicHeadRender',template.compile(fs.readFileSync('views/mobile/common/basicHead.tmpl','utf8')));
-  redisUtil.setRedis('f2e:common:headerRender',template.compile(fs.readFileSync('views/mobile/common/header.tmpl','utf8')));
-  redisUtil.setRedis('f2e:common:staticRender',template.compile(fs.readFileSync('views/mobile/common/static.tmpl','utf8')));
-  redisUtil.setRedis('f2e:common:footerRender',template.compile(fs.readFileSync('views/mobile/common/footer.tmpl','utf8')));
-  //redisUtil.setRedis('f2e:channel:homePageRender',template.compile(fs.readFileSync('views/mobile/channel/homepage/homepage.tmpl','utf8')));
-  //redisUtil.setRedis('f2e:channel:footRender',template.compile(fs.readFileSync('views/mobile/channel/foot.tmpl','utf8')));
-
-  // 达人店公共头尾部
-  redisUtil.setRedis('f2e:shop:commonHeadRender',template.compile(fs.readFileSync('views/mobile/shop/common/head.tmpl','utf8')));
-  redisUtil.setRedis('f2e:shop:commonHeaderRender',template.compile(fs.readFileSync('views/mobile/shop/common/header.tmpl','utf8')));
-  redisUtil.setRedis('f2e:shop:commonFootRender',template.compile(fs.readFileSync('views/mobile/shop/common/foot.tmpl','utf8')));
-  redisUtil.setRedis('f2e:shop:commonFooterRender',template.compile(fs.readFileSync('views/mobile/shop/common/footer.tmpl','utf8')));
-
-  // 活动页面头尾部
-  redisUtil.setRedis('f2e:activity:commonHeadRender',template.compile(fs.readFileSync('views/mobile/activity/common/head.tmpl','utf8')));
-  redisUtil.setRedis('f2e:activity:commonFootRender',template.compile(fs.readFileSync('views/mobile/activity/common/foot.tmpl','utf8')));
-
-  // 错误页面预编译
-  redisUtil.setRedis('f2e:common:error50xRender',template.compile(fs.readFileSync('views/mobile/shop/error/50x.tmpl','utf8')));
-  redisUtil.setRedis('f2e:common:error404Render',template.compile(fs.readFileSync('views/mobile/shop/error/404.tmpl','utf8')));
-};
-
-preHandle();
 
 // 绑定环境到app实例
 app.env = env;
@@ -235,7 +239,8 @@ projs.forEach(function(proj){
     jsons.forEach(function(json){
       if(path.extname(json) !== '.json')
         return;
-
+      if(!fs.existsSync(path.join(loc,json)))
+        return;
       MidProxy.init(path.join(loc,json));
     })
   }catch(e){
